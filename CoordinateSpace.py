@@ -7,7 +7,7 @@ class Coordinatespace:
     """
     def __init__(self, angle, scale, origin):
         self.angle = angle
-        self.scale = scale
+        self.s = scale
         self.origin = origin
 
     def scale(self, factor):
@@ -15,7 +15,7 @@ class Coordinatespace:
         Scale the local coordinate system from the local origin
         :param factor: scaling factor
         """
-        self.scale *= factor
+        self.s *= factor
 
     def rotate(self, theta):
         """
@@ -32,6 +32,11 @@ class Coordinatespace:
         """
         self.origin = self.get_global_pos(pos)
 
+    def make_equal(self, other):
+        self.angle = other.angle
+        self.s = other.s
+        self.origin = other.origin
+
 
     def get_global_pos(self, pos):
         """
@@ -42,8 +47,8 @@ class Coordinatespace:
         :return:
         (x, y) global position
         """
-        pos = pos[0]*self.scale, pos[1]*self.scale,
-        x, y = self.rotate_point(pos[0], pos[1], self.origin[0], self.origin[1], self.angle)
+        pos = float(pos[0])*self.s, float(pos[1])*self.s,
+        x, y = self.rotate_point(pos[0], pos[1], 0, 0, self.angle)
         return self.origin[0] + x, self.origin[1] + y
 
     @staticmethod

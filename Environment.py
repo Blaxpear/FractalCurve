@@ -15,9 +15,9 @@ class Environment:
         self.graphics = Graphics(root, self.surf, (W/2, H/2))
 
     def mainloop(self):
+        self.graphics.redraw(1)
         while not self.exited:
             self.doevents()
-            self.graphics.redraw(0)
             pygame.display.update()
 
     def doevents(self):

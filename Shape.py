@@ -13,6 +13,14 @@ class Shape:
         self.length = vtxlist[0].distanceTo(vtxlist[-1])
         self.links = []
         self.vtx = vtxlist
+        self.link_adjacent()
+
+    def link_adjacent(self):
+        """
+        Link each vertex to the one next to it
+        """
+        for i in range(len(self.vtx) - 1):
+            self.links.append(self.link(self.vtx[i], self.vtx[i + 1]))
 
     def link(self, vtx1, vtx2):
         """
@@ -23,13 +31,19 @@ class Shape:
         """
         d = vtx1.distanceTo(vtx2)
         scale = d / self.length
-        return Link(vtx1, vtx2, scale)
+        return Link(vtx1, vtx2, scale, self)
 
     def draw(self, stage, graphics):
         graphics.csstack.push()
         if stage == 0:
             #draw zero-shape
             graphics.draw_line(self.vtx[0].pos(0), self.vtx[-1].pos(0))
-        else:
-            #TODO: draw shape
-            print("draw non-zero shape")
+        elif stage == 1:
+            next_stage = stage - 1
+            for link in self.links:
+                graphics.cs.set_origin(link.vtx1.pos(stage))
+                link.draw(next_stage, graphics)
+                graphics.csstack.pop()
+                graphics.csstack.revert()
+
+

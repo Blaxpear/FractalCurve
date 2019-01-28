@@ -19,6 +19,12 @@ class CSStack:
         """
         self.stack.append(copy.deepcopy(self.local))
 
+    def revert(self):
+        """
+        Save coordinate space from stack into current coordinate space
+        """
+        self.local.make_equal(self.stack[-1])
+
     def pop(self):
         """
         Pop the last coordinate space in stack
