@@ -35,13 +35,16 @@ class Coordinatespace:
 
     def get_global_pos(self, pos):
         """
-        Return global position from local pos
+        Return global position from local pos.
+        Rotate, scale and translate the local pos to get the global position.
         :param pos:
-        position in local coordinate system
+        (x, y) position in local coordinate system
         :return:
-        global position
+        (x, y) global position
         """
+        pos = pos[0]*self.scale, pos[1]*self.scale,
         x, y = self.rotate_point(pos[0], pos[1], self.origin[0], self.origin[1], self.angle)
+        return self.origin[0] + x, self.origin[1] + y
 
     @staticmethod
     def rotate_point(x, y, xo, yo, theta):
@@ -52,8 +55,7 @@ class Coordinatespace:
         :param xo: rotation origin x
         :param yo: rotation origin y
         :param theta: rotation angle
-        :return:
-        rotated positon
+        :return: rotated positon
         """
         s = math.sin(theta)
         c = math.cos(theta)

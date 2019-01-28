@@ -25,11 +25,11 @@ class Shape:
         scale = d / self.length
         return Link(vtx1, vtx2, scale)
 
-
     def draw(self, stage, graphics):
+        graphics.csstack.push()
         if stage == 0:
             #draw zero-shape
-            graphics.draw_line(self.vtx[0].pos(), self.vtx[-1].pos())
+            graphics.draw_line(self.vtx[0].pos(0), self.vtx[-1].pos(0))
         else:
             #TODO: draw shape
             print("draw non-zero shape")

@@ -1,35 +1,44 @@
 import pygame
+from CoordinateSpace import Coordinatespace
+from CoordinateSpaceStack import CSStack
 
 
 class Graphics:
     """
     Class for drawing
     """
-    def __init__(self, root):
-        self.pg = pygame
-        self.pg.init()
-        self.pg.display.set_caption("Fractal curve generator")
-        self.disp = self.pg.display.set_mode((512, 512))
+    def __init__(self, root, surface, origin=(0, 0)):
+        """
+        Initialize graphics
+        :param root: first shape to draw
+        :param surface: pygame surface object to draw on
+        :param origin: (x, y) position of the root. default: (0, 0), top left corner
+        """
+        self.surf = surface
         self.root = root
+        self.cs = Coordinatespace(0, 1, origin)
+        self.csstack = CSStack(self.cs)
 
-    def updatescreen(self, stage):
+    def redraw(self, stage):
         """
-        :param stage:
-        stage of the fractal
+        Clear surface and redraw fractal
+        :param stage: stage of the fractal
         """
-        self.disp.fill((0, 0, 0))
+        self.surf.fill((0, 0, 0))
         self.root.draw(stage, self)
-        self.pg.display.update()
+        self.csstack.pop()
+
 
     def draw_line(self, pos1, pos2):
         """
-        draw a line using current coordinate system
-        :param pos1:
-        :param pos2:
-        :return:
+        Draw a line using local coordinate system by converting pos1 and pos2 into global coordinates
+        :param pos1: local point
+        :param pos2: local point
         """
-        pygame.draw.line(self.disp,
+        global_pos1 = self.cs.get_global_pos(pos1)
+        global_pos2 = self.cs.get_global_pos(pos2)
+        pygame.draw.line(self.surf,
                          (255, 255, 255),
-                         (pos1[0], pos1[1]),
-                         (pos2[0], pos2[1]),
+                         (global_pos1[0], global_pos1[1]),
+                         (global_pos2[0], global_pos2[1]),
                          1)
