@@ -36,7 +36,7 @@ class Graphics:
         self.draw_line((0, 10), (0,-10), (255, 0, 0))
         self.draw_line((10, 0), (-10, 0), (255, 0, 0))
 
-    def draw_line(self, pos1, pos2, color=(255, 255, 255)):
+    def draw_line(self, pos1, pos2, color=(0, 255, 255)):
         """
         Draw a line using local coordinate system by converting pos1 and pos2 into global coordinates
         :param pos1: local point
@@ -45,7 +45,6 @@ class Graphics:
         """
         global_pos1 = self.cs.get_global_pos(pos1)
         global_pos2 = self.cs.get_global_pos(pos2)
-        print("from {0} to {1}".format(global_pos1, global_pos2))
         pygame.draw.line(self.surf,
                          color,
                          (global_pos1[0], global_pos1[1]),

@@ -13,7 +13,7 @@ class Vertex:
         self.dx = x - x0
         self.dy = y - y0
 
-    def pos(self, stage = 1):
+    def pos(self, stage=1):
         """
         Return position of vertex in given stage
         :param stage: float from 0 to 1, 0 being the zero-shape position and 1 full shape
