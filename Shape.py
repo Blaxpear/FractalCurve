@@ -41,9 +41,7 @@ class Shape:
         elif stage == 1:
             next_stage = stage - 1
             for link in self.links:
-                graphics.cs.set_origin(link.vtx1.pos(stage))
                 link.draw(next_stage, graphics)
-                graphics.csstack.pop()
-                graphics.csstack.revert()
+
 
 

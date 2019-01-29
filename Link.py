@@ -11,7 +11,10 @@ class Link:
         self.shape = shape
 
     def draw(self, stage, graphics):
+        graphics.cs.set_origin(self.vtx1.pos(stage+1))
         graphics.cs.rotate(self.angle)
         graphics.cs.scale(self.scale)
         self.shape.draw(stage, graphics)
+        graphics.csstack.pop()
+        graphics.csstack.revert()
 
