@@ -36,7 +36,7 @@ class Vertex:
         :param vertex: vertex
         :return: float, angle in rads
         """
-        return math.atan2(vertex.x - self.x, vertex.y - self.y)
+        return math.atan2(vertex.y - self.y, vertex.x - self.x)
 
     def distanceTo(self, vertex):
         """
