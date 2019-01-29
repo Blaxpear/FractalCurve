@@ -22,7 +22,7 @@ class Vertex:
         if stage == 0:
             # return zero-shape position
             return [self.x0, self.y0]
-        elif stage == 1:
+        elif stage >= 1:
             # full stage position
             return [self.x, self.y]
         else:

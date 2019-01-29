@@ -38,10 +38,17 @@ class Shape:
         if stage == 0:
             #draw zero-shape
             graphics.draw_line(self.vtx[0].pos(0), self.vtx[-1].pos(0))
-        elif stage == 1:
+        elif stage >= 1:
             next_stage = stage - 1
             for link in self.links:
                 link.draw(next_stage, graphics)
+                graphics.csstack.pop()
+                graphics.csstack.revert()
+        else:
+            self.draw_transitional(stage, graphics)
 
+    def draw_transitional(self, stage, graphics):
+        for i in range(len(self.links)):
+            graphics.draw_line(self.vtx[i].pos(stage), self.vtx[i+1].pos(stage))
 
 
