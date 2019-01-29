@@ -1,4 +1,5 @@
 import pygame
+import time
 from Graphics import Graphics
 W = 512
 H = 512
@@ -15,10 +16,14 @@ class Environment:
         self.graphics = Graphics(root, self.surf, (W/2, H/2))
 
     def mainloop(self):
-        self.graphics.redraw(1)
+        stage = 0
+        time.sleep(2)
         while not self.exited:
+            stage += 0.01
             self.doevents()
+            self.graphics.redraw(stage)
             pygame.display.update()
+            time.sleep(0.01)
 
     def doevents(self):
         """
