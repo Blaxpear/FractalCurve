@@ -29,10 +29,16 @@ class Graphics:
         self.csstack.pop()
 
     def draw_bg(self):
+        """
+        Clear screen and draw origin
+        """
         self.surf.fill((0, 0, 0))
         self.draw_origin()
 
     def draw_origin(self):
+        """
+        Draw a 20 by 20 red cross in the origin
+        """
         self.draw_line((0, 10), (0,-10), (255, 0, 0))
         self.draw_line((10, 0), (-10, 0), (255, 0, 0))
 

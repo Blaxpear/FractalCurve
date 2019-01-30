@@ -34,20 +34,33 @@ class Shape:
         return Link(vtx1, vtx2, scale, self)
 
     def draw(self, stage, graphics):
+        """
+        Draw shape in given stage
+        :param stage: stage
+        :param graphics: graphics object to draw onto
+        """
         graphics.csstack.push()
         if stage == 0:
             #draw zero-shape
             graphics.draw_line(self.vtx[0].pos(0), self.vtx[-1].pos(0))
-        elif stage >= 1:
+        elif stage < 1:
+            #draw shape in transition
+            self.draw_transitional(stage, graphics)
+        else:
+            #draw next shape onto each link
             next_stage = stage - 1
             for link in self.links:
                 link.draw(next_stage, graphics)
                 graphics.csstack.pop()
                 graphics.csstack.revert()
-        else:
-            self.draw_transitional(stage, graphics)
+
 
     def draw_transitional(self, stage, graphics):
+        """
+        Draw lines between vetrices at given stage position
+        :param stage: stage
+        :param graphics: graphics object to draw onto
+        """
         for i in range(len(self.links)):
             graphics.draw_line(self.vtx[i].pos(stage), self.vtx[i+1].pos(stage))
 

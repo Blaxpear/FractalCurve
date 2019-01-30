@@ -33,6 +33,10 @@ class Coordinatespace:
         self.origin = self.get_global_pos(pos)
 
     def make_equal(self, other):
+        """
+        Copy angle scale and origin from given coordinate space
+        :param other: coordinate space to copy
+        """
         self.angle = other.angle
         self.s = other.s
         self.origin = other.origin

@@ -9,6 +9,10 @@ class Environment:
     Class for handling pycharm
     """
     def __init__(self, root):
+        """
+        Initialize environment
+        :param root: Shape to make the fractal from
+        """
         pygame.init()
         pygame.display.set_caption("Fractal curve generator")
         self.surf = pygame.display.set_mode((W, H))
@@ -16,8 +20,10 @@ class Environment:
         self.graphics = Graphics(root, self.surf, (W/2, H/2))
 
     def mainloop(self):
+        """
+        Animate fractal until window is closed
+        """
         stage = 0
-        time.sleep(2)
         while not self.exited:
             stage += 0.01
             self.doevents()

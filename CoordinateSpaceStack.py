@@ -23,7 +23,6 @@ class CSStack:
         """
         Save coordinate space from stack into current coordinate space
         """
-
         self.local.make_equal(self.stack[-1])
 
     def pop(self):
