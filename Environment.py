@@ -25,10 +25,26 @@ class Environment:
             end = self.settings.getitem("Program", "endstage", float)
             speed = self.settings.getitem("Program", "speed", float)
             self.animate(initial, end, speed)
+        elif mode == "image":
+            stage = self.settings.getitem("Program", "endstage", float)
+            self.image(stage)
+
+    def image(self, stage):
+        """
+        draw image of the fractal at given stage
+        :param stage: stage
+        """
+        while not self.exited:
+            self.doevents()
+            self.graphics.redraw(stage)
+            pygame.display.update()
 
     def animate(self, start, end, speed):
         """
         Animate fractal stages from start to end
+        :param start: first stage
+        :param end: last stage, -1 for infinity
+        :param speed: how much stage changes each frame
         """
         stage = start
         while not self.exited and (stage <= end or end == -1):
