@@ -14,7 +14,7 @@ class Graphics:
         :param surface: pygame surface object to draw on
         :param origin: (x, y) position of the root. default: (0, 0), top left corner
         """
-        self.clearframe = settings.getitem("Graphics", "clearframe", bool)
+        self.clearframe = settings.getitem("Graphics", "clearframe", str) == "True"
         self.root = root
         self.surf = surface
         self.settings = settings
@@ -109,7 +109,7 @@ class Graphics:
             if stage == 1:
                 return colors[-1]
             for i in range(len(colors)):
-                if stage > colorstages[i] and stage < colorstages[i+1]:
+                if stage >= colorstages[i] and stage < colorstages[i+1]:
                     RGB1 = colors[i]
                     RGB2 = colors[i+1]
                     D_RGB = [RGB2[0] - RGB1[0], RGB2[1] - RGB1[1], RGB2[2] - RGB1[2]]
