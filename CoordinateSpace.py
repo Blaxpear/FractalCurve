@@ -41,7 +41,6 @@ class Coordinatespace:
         self.s = other.s
         self.origin = other.origin
 
-
     def get_global_pos(self, pos):
         """
         Return global position from local pos.

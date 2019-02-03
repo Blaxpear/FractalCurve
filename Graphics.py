@@ -17,7 +17,8 @@ class Graphics:
         self.root = root
         self.surf = surface
         self.settings = settings
-        self.cs = Coordinatespace(settings.angle, settings.scale, settings.origin)
+        self.screencs = Coordinatespace(0, 1, settings.origin)
+        self.cs = Coordinatespace(settings.angle, settings.scale, (0, 0))
         self.csstack = CSStack(self.cs)
 
     def redraw(self, stage):
@@ -43,6 +44,26 @@ class Graphics:
         self.draw_line((0, 10), (0,-10), color=(255, 0, 0))
         self.draw_line((10, 0), (-10, 0), color=(255, 0, 0))
 
+    def drag_screen(self, amount):
+        """
+        Move screen coordinate space origin by amount. In other words drag the whole screen by amount.
+        :param amount: (dx, dy)
+        """
+        o = self.screencs.origin
+        self.screencs.origin = (o[0] + amount[0], o[1] + amount[1])
+
+    def zoom_screen(self, p):
+        """
+        Scale screen coordinate space by p.
+        :param p: percentage to scale.
+        Examples
+        p = 1: 100%, nothing happens
+        p = 2: 200%, zoom in to twice the current scale
+        p = 0.5: 50%, zoom out to half the current scale
+        """
+        #TODO: zoomin into a point
+        self.screencs.scale(p)
+
     def draw_line(self, pos1, pos2, color=None, stage=None):
         """
         Draw a line using local coordinate system by converting pos1 and pos2 into global coordinates
@@ -54,10 +75,12 @@ class Graphics:
             color = self.get_gradient_color(stage)
         global_pos1 = self.cs.get_global_pos(pos1)
         global_pos2 = self.cs.get_global_pos(pos2)
+        screen_pos1 = self.screencs.get_global_pos(global_pos1)
+        screen_pos2 = self.screencs.get_global_pos(global_pos2)
         pygame.draw.line(self.surf,
                          color,
-                         (global_pos1[0], global_pos1[1]),
-                         (global_pos2[0], global_pos2[1]),
+                         (screen_pos1[0], screen_pos1[1]),
+                         (screen_pos2[0], screen_pos2[1]),
                          1)
 
     def get_gradient_color(self, stage):

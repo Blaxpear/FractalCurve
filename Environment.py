@@ -23,7 +23,7 @@ class Environment:
         """
         stage = 0
         while not self.exited:
-            stage += 0.01
+            stage += 0.0001
             self.doevents()
             self.graphics.redraw(stage)
             pygame.display.update()
@@ -36,3 +36,11 @@ class Environment:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.exited = True
+            elif event.type == pygame.MOUSEMOTION:
+                if pygame.mouse.get_pressed()[0] == 1:
+                    self.graphics.drag_screen(event.rel)
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 4:
+                    self.graphics.zoom_screen(1.1)
+                elif event.button == 5:
+                    self.graphics.zoom_screen(1/1.1)
