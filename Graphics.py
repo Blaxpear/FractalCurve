@@ -3,6 +3,7 @@ from CoordinateSpace import Coordinatespace
 from CoordinateSpaceStack import CSStack
 
 
+
 class Graphics:
     """
     Class for drawing
@@ -17,7 +18,7 @@ class Graphics:
         """
         self.clearframe = settings.getitem("Graphics", "clearframe", str) == "True"
         self.root = root
-        self.stage = 0
+        self.stage = None
         self.surf = surface
         self.settings = settings
         self.cs = Coordinatespace(0, 1, (0, 0))
@@ -132,7 +133,7 @@ class Graphics:
                     RGB1 = colors[i]
                     RGB2 = colors[i+1]
                     D_RGB = [RGB2[0] - RGB1[0], RGB2[1] - RGB1[1], RGB2[2] - RGB1[2]]
-                    stageremainder = self.stage - colorstages[i]
+                    stageremainder = stage - colorstages[i]
                     stagegapsize = colorstages[i+1] - colorstages[i]
                     p = stageremainder/stagegapsize
                     r = min(max(0, RGB1[0] + D_RGB[0]*p), 255)
