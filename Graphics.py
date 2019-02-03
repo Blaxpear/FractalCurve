@@ -12,15 +12,19 @@ class Graphics:
         Initialize graphics
         :param root: first shape to draw
         :param surface: pygame surface object to draw on
-        :param origin: (x, y) position of the root. default: (0, 0), top left corner
+        :param settings: settings object
+        :param initialstage: initial stage
         """
         self.clearframe = settings.getitem("Graphics", "clearframe", str) == "True"
         self.root = root
+        self.stage = 0
         self.surf = surface
         self.settings = settings
         self.cs = Coordinatespace(0, 1, (0, 0))
         self.csstack = CSStack(self.cs)
         self.resetview()
+        self.font = pygame.font.SysFont("Consolas", 12)
+        self.draworigin = settings.getitem("Graphics", "draworigin", str) == "True"
 
     def resetview(self):
         """
@@ -31,13 +35,19 @@ class Graphics:
                                         self.settings.getitem("Graphics", "scale", float),
                                         self.settings.getlist("Graphics", "origin", float))
 
-    def redraw(self, stage):
+    def advancestage(self, amount):
+        """
+        Add amount to current stage
+        """
+        self.stage += amount
+
+    def redraw(self):
         """
         Clear surface and redraw fractal
-        :param stage: stage of the fractal
         """
         self.draw_bg()
-        self.root.draw(stage, self)
+        self.root.draw(self.stage, self)
+        self.drawstagecounter()
         self.csstack.pop()
 
     def draw_bg(self):
@@ -46,7 +56,8 @@ class Graphics:
         """
         if self.clearframe:
             self.surf.fill((0, 0, 0))
-        self.draw_origin()
+        if self.draworigin:
+            self.draw_origin()
 
     def draw_origin(self):
         """
@@ -54,6 +65,13 @@ class Graphics:
         """
         self.draw_line((0, 10), (0,-10), color=(255, 0, 0))
         self.draw_line((10, 0), (-10, 0), color=(255, 0, 0))
+
+    def drawstagecounter(self):
+        """
+        Draw stage number to the top left corner
+        """
+        tesxsurf = self.font.render("{:.4f}".format(self.stage), False, (255, 255, 255))
+        self.surf.blit(tesxsurf, (0,0))
 
     def drag_screen(self, amount):
         """
@@ -75,12 +93,13 @@ class Graphics:
         #TODO: zoomin into a point
         self.screencs.scale(p)
 
-    def draw_line(self, pos1, pos2, color=None, stage=None):
+    def draw_line(self, pos1, pos2, stage, color=None):
         """
         Draw a line using local coordinate system by converting pos1 and pos2 into global coordinates
         :param pos1: local point
         :param pos2: local point
         :param color: line color
+        :param stage: stage for gradient coloring
         """
         if color is None:
             color = self.get_gradient_color(stage)
@@ -109,11 +128,11 @@ class Graphics:
             if stage == 1:
                 return colors[-1]
             for i in range(len(colors)):
-                if stage >= colorstages[i] and stage < colorstages[i+1]:
+                if colorstages[i] <= stage < colorstages[i + 1]:
                     RGB1 = colors[i]
                     RGB2 = colors[i+1]
                     D_RGB = [RGB2[0] - RGB1[0], RGB2[1] - RGB1[1], RGB2[2] - RGB1[2]]
-                    stageremainder = stage - colorstages[i]
+                    stageremainder = self.stage - colorstages[i]
                     stagegapsize = colorstages[i+1] - colorstages[i]
                     p = stageremainder/stagegapsize
                     r = min(max(0, RGB1[0] + D_RGB[0]*p), 255)

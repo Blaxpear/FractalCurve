@@ -17,6 +17,7 @@ class Environment:
         self.surf = pygame.display.set_mode(settings.getlist("System", "resolution", int))
         self.exited = False
         self.graphics = Graphics(root, self.surf, settings)
+        self.autodraw = settings.getitem("Program", "autodraw", str) == "True"
 
     def runmode(self):
         mode = self.settings.getitem("Program", "mode", str)
@@ -35,9 +36,7 @@ class Environment:
         :param stage: stage
         """
         while not self.exited:
-            self.doevents()
-            self.graphics.redraw(stage)
-            pygame.display.update()
+            self.updateFrame(stage)
 
     def animate(self, start, end, speed):
         """
@@ -46,13 +45,22 @@ class Environment:
         :param end: last stage, -1 for infinity
         :param speed: how much stage changes each frame
         """
-        stage = start
-        while not self.exited and (stage <= end or end == -1):
-            stage += speed
-            self.doevents()
-            self.graphics.redraw(stage)
-            pygame.display.update()
+        self.graphics.stage = start
+        while not self.exited:
+            if self.graphics.stage <= end or end == -1:
+                self.graphics.advancestage(speed)
+            self.updateFrame()
             time.sleep(0.01)
+
+    def updateFrame(self):
+        """
+        Handle events for a new frame
+        :param stage: stage
+        """
+        self.doevents()
+        if self.autodraw:
+            self.graphics.redraw()
+        pygame.display.update()
 
     def doevents(self):
         """
@@ -72,3 +80,5 @@ class Environment:
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_F1:
                     self.graphics.resetview()
+                if event.key == pygame.K_F5:
+                    self.graphics.redraw()
