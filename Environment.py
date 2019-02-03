@@ -13,7 +13,7 @@ class Environment:
         """
         pygame.init()
         pygame.display.set_caption("Fractal curve generator")
-        self.surf = pygame.display.set_mode(settings.resolution)
+        self.surf = pygame.display.set_mode(settings.getlist("System", "resolution", int))
         self.exited = False
         self.graphics = Graphics(root, self.surf, settings)
 
@@ -23,7 +23,7 @@ class Environment:
         """
         stage = 0
         while not self.exited:
-            stage += 0.0001
+            stage += 0.01
             self.doevents()
             self.graphics.redraw(stage)
             pygame.display.update()

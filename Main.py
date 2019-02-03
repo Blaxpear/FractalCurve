@@ -10,14 +10,7 @@ def main():
     vtx4 = Vertex(100, 0, 100, 0)
     sh = Shape([vtx1, vtx2, vtx3, vtx4])
 
-    s = Settings()
-    s.gradient=[[0, 0, 255], [0, 0, 255]]
-    s.gradientbounds = 1
-    s.resolution = (512, 512)
-    s.origin = (256, 256)
-    s.scale = 2
-    s.angle = 0
-
+    s = Settings('settings.ini')
     e = Environment(sh, s)
     e.mainloop()
 

@@ -17,8 +17,10 @@ class Graphics:
         self.root = root
         self.surf = surface
         self.settings = settings
-        self.screencs = Coordinatespace(0, 1, settings.origin)
-        self.cs = Coordinatespace(settings.angle, settings.scale, (0, 0))
+        self.screencs = Coordinatespace(0, 1, settings.getlist("Graphics", "origin", float))
+        self.cs = Coordinatespace(settings.getitem("Graphics", "angle", float),
+                                  settings.getitem("Graphics", "scale", float),
+                                  (0, 0))
         self.csstack = CSStack(self.cs)
 
     def redraw(self, stage):
@@ -85,12 +87,27 @@ class Graphics:
 
     def get_gradient_color(self, stage):
         """
-        Get color from settings.gradient using settings.gradientbounds
+        Get color from gradient.
+        Gradient changes linearly between two adjacent colorstages and their corresponding color.
         :param stage: stage
-        :return: [R, G, B] color from gradient
+        :return: [R, G, B] color from gradient at given stage
         """
-        RGB1 = self.settings.gradient[0]
-        RGB2 = self.settings.gradient[1]
-        D_RGB = [RGB2[0] - RGB1[0], RGB2[1] - RGB1[1], RGB2[2] - RGB1[2]]
-        p = min(stage/self.settings.gradientbounds, 1)
-        return [RGB1[0] + D_RGB[0]*p, RGB1[1] + D_RGB[1]*p, RGB1[2] + D_RGB[2]*p]
+        colorstages = self.settings.getlist("Graphics", "colorstages", float)
+        colors = self.settings.getlist2d("Graphics", "colors", float)
+        if len(colors) == 1:
+            return colors[0]
+        else:
+            if stage == 1:
+                return colors[-1]
+            for i in range(len(colors)):
+                if stage > colorstages[i] and stage < colorstages[i+1]:
+                    RGB1 = colors[i]
+                    RGB2 = colors[i+1]
+                    D_RGB = [RGB2[0] - RGB1[0], RGB2[1] - RGB1[1], RGB2[2] - RGB1[2]]
+                    stageremainder = stage - colorstages[i]
+                    stagegapsize = colorstages[i+1] - colorstages[i]
+                    p = stageremainder/stagegapsize
+                    r = min(max(0, RGB1[0] + D_RGB[0]*p), 255)
+                    g = min(max(0, RGB1[1] + D_RGB[1]*p), 255)
+                    b = min(max(0, RGB1[2] + D_RGB[2]*p), 255)
+                    return [r, g, b]
