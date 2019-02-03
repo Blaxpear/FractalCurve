@@ -35,8 +35,9 @@ class Environment:
         draw image of the fractal at given stage
         :param stage: stage
         """
+        self.graphics.stage = stage
         while not self.exited:
-            self.updateFrame(stage)
+            self.updateFrame()
 
     def animate(self, start, end, speed):
         """
