@@ -1,5 +1,6 @@
 import pygame
 import time
+from math import ceil
 from Graphics import Graphics
 
 class Environment:
@@ -17,18 +18,21 @@ class Environment:
         self.surf = pygame.display.set_mode(settings.getlist("System", "resolution", int))
         self.exited = False
         self.graphics = Graphics(root, self.surf, settings)
+        self.total_lines = 0
         self.autodraw = settings.getitem("Program", "autodraw", str) == "True"
 
     def runmode(self):
+
+        endstage = self.settings.getitem("Program", "endstage", float)
+        self.total_lines = self.linestodraw(endstage)
+        print("Total lines:", self.total_lines)
         mode = self.settings.getitem("Program", "mode", str)
         if mode == "animate":
             initial = self.settings.getitem("Program", "initialstage", float)
-            end = self.settings.getitem("Program", "endstage", float)
             speed = self.settings.getitem("Program", "speed", float)
-            self.animate(initial, end, speed)
+            self.animate(initial, endstage, speed)
         elif mode == "image":
-            stage = self.settings.getitem("Program", "endstage", float)
-            self.image(stage)
+            self.image(endstage)
 
     def image(self, stage):
         """
@@ -47,11 +51,26 @@ class Environment:
         :param speed: how much stage changes each frame
         """
         self.graphics.stage = start
+        stage_n = ceil(start)
         while not self.exited:
             if self.graphics.stage <= end or end == -1:
                 self.graphics.advancestage(speed)
+                if stage_n != ceil(self.graphics.stage):
+                    n_drawn = self.linestodraw(stage_n)
+                    stage_n = ceil(self.graphics.stage)
+                    print("{:.10f}%".format(float(n_drawn/self.total_lines)))
+
             self.updateFrame()
             time.sleep(0.01)
+
+    def linestodraw(self, stage):
+        """
+        Return number of lines required to draw fractal at the given stage
+        :param stage: stage
+        :return: int, number of lines
+        """
+        linesinshape = len(self.graphics.root.links)
+        return linesinshape ** ceil(stage)
 
     def updateFrame(self):
         """
