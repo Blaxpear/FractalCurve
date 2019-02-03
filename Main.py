@@ -5,7 +5,7 @@ from Settings import Settings
 
 def main():
     vtx1 = Vertex(0, 0, 0, 0)
-    vtx2 = Vertex(50, -20, 50, 0)
+    vtx2 = Vertex(50, -80, 50, 0)
     vtx4 = Vertex(100, 0, 100, 0)
     sh = Shape([vtx1, vtx2, vtx4])
 

@@ -1,5 +1,8 @@
 import pygame
 import time
+import imageio
+from os import listdir, remove
+from os.path import  isfile, join
 from math import ceil
 from Graphics import Graphics
 
@@ -20,9 +23,12 @@ class Environment:
         self.graphics = Graphics(root, self.surf, settings)
         self.total_lines = 0
         self.autodraw = settings.getitem("Program", "autodraw", str) == "True"
+        self.export = settings.getitem("Program", "export", str) == "True"
 
     def runmode(self):
-
+        """
+        Run mode defined in settings
+        """
         endstage = self.settings.getitem("Program", "endstage", float)
         self.total_lines = self.linestodraw(endstage)
         print("Total lines:", self.total_lines)
@@ -59,9 +65,23 @@ class Environment:
                     n_drawn = self.linestodraw(stage_n)
                     stage_n = ceil(self.graphics.stage)
                     print("{:.10f}%".format(float(n_drawn/self.total_lines)))
-
             self.updateFrame()
+            if self.export:
+                self.exportScreen("tmp", self.graphics.stage)
             time.sleep(0.01)
+        self.exportToGif("animation.gif")
+
+    def exportToGif(self, name):
+        files = [f for f in listdir("./tmp") if isfile(join("./tmp", f))]
+        images = []
+        for file in files:
+            images.append(imageio.imread('./tmp/'+file))
+            remove('./tmp/'+file)
+        imageio.mimsave(name, images, duration=0.001)
+
+
+    def exportScreen(self, folder, stage):
+        pygame.image.save(self.surf, "{}/frame{}.jpeg".format(folder, stage))
 
     def linestodraw(self, stage):
         """
@@ -75,7 +95,6 @@ class Environment:
     def updateFrame(self):
         """
         Handle events for a new frame
-        :param stage: stage
         """
         self.doevents()
         if self.autodraw:
