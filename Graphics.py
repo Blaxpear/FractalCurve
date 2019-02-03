@@ -18,11 +18,18 @@ class Graphics:
         self.root = root
         self.surf = surface
         self.settings = settings
-        self.screencs = Coordinatespace(0, 1, settings.getlist("Graphics", "origin", float))
-        self.cs = Coordinatespace(settings.getitem("Graphics", "angle", float),
-                                  settings.getitem("Graphics", "scale", float),
-                                  (0, 0))
+        self.cs = Coordinatespace(0, 1, (0, 0))
         self.csstack = CSStack(self.cs)
+        self.resetview()
+
+    def resetview(self):
+        """
+        Reset view zoom and pan into ini file values
+        :return:
+        """
+        self.screencs = Coordinatespace(self.settings.getitem("Graphics", "angle", float),
+                                        self.settings.getitem("Graphics", "scale", float),
+                                        self.settings.getlist("Graphics", "origin", float))
 
     def redraw(self, stage):
         """

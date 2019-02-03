@@ -69,3 +69,6 @@ class Environment:
                     self.graphics.zoom_screen(1.1)
                 elif event.button == 5:
                     self.graphics.zoom_screen(1/1.1)
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_F1:
+                    self.graphics.resetview()
