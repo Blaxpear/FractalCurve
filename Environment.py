@@ -13,17 +13,26 @@ class Environment:
         """
         pygame.init()
         pygame.display.set_caption("Fractal curve generator")
+        self.settings = settings
         self.surf = pygame.display.set_mode(settings.getlist("System", "resolution", int))
         self.exited = False
         self.graphics = Graphics(root, self.surf, settings)
 
-    def mainloop(self):
+    def runmode(self):
+        mode = self.settings.getitem("Program", "mode", str)
+        if mode == "animate":
+            initial = self.settings.getitem("Program", "initialstage", float)
+            end = self.settings.getitem("Program", "endstage", float)
+            speed = self.settings.getitem("Program", "speed", float)
+            self.animate(initial, end, speed)
+
+    def animate(self, start, end, speed):
         """
-        Animate fractal until window is closed
+        Animate fractal stages from start to end
         """
-        stage = 0
-        while not self.exited:
-            stage += 0.01
+        stage = start
+        while not self.exited and (stage <= end or end == -1):
+            stage += speed
             self.doevents()
             self.graphics.redraw(stage)
             pygame.display.update()

@@ -12,7 +12,7 @@ def main():
 
     s = Settings('settings.ini')
     e = Environment(sh, s)
-    e.mainloop()
+    e.runmode()
 
 
 

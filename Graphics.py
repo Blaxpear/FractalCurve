@@ -14,6 +14,7 @@ class Graphics:
         :param surface: pygame surface object to draw on
         :param origin: (x, y) position of the root. default: (0, 0), top left corner
         """
+        self.clearframe = settings.getitem("Graphics", "clearframe", bool)
         self.root = root
         self.surf = surface
         self.settings = settings
@@ -36,7 +37,8 @@ class Graphics:
         """
         Clear screen and draw origin
         """
-        self.surf.fill((0,0,0))
+        if self.clearframe:
+            self.surf.fill((0, 0, 0))
         self.draw_origin()
 
     def draw_origin(self):
