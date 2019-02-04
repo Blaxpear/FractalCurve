@@ -32,9 +32,19 @@ class Graphics:
         Reset view zoom and pan into ini file values
         :return:
         """
-        self.screencs = Coordinatespace(self.settings.getitem("Graphics", "angle", float),
-                                        self.settings.getitem("Graphics", "scale", float),
-                                        self.settings.getlist("Graphics", "origin", float))
+        angle = self.settings.getitem("Graphics", "angle", float)
+        scale = self.settings.getitem("Graphics", "scale", float)
+        originsetting = self.settings.getitem("Graphics", "origin", str)
+        if originsetting == 'fit':
+            d = self.root.length*scale
+            res = self.settings.getlist("System", "resolution", int)
+            x = (res[0] - d)/2
+            y = res[1]/2
+            origin = (x, y)
+        else:
+            origin = self.settings.getlist("Graphics", "origin", float)
+
+        self.screencs = Coordinatespace(angle, scale, origin)
 
     def advancestage(self, amount):
         """

@@ -59,7 +59,7 @@ class Environment:
         self.graphics.stage = start
         stage_n = ceil(start)
         while not self.exited:
-            if self.graphics.stage <= end or end == -1:
+            if self.graphics.stage < end - speed or end == -1:
                 self.graphics.advancestage(speed)
                 if stage_n != ceil(self.graphics.stage):
                     n_drawn = self.linestodraw(stage_n)
@@ -69,7 +69,8 @@ class Environment:
             if self.export:
                 self.exportScreen("tmp", self.graphics.stage)
             time.sleep(0.01)
-        self.exportToGif("animation.gif")
+        if self.export:
+            self.exportToGif("animation.gif")
 
     def exportToGif(self, name):
         files = [f for f in listdir("./tmp") if isfile(join("./tmp", f))]
