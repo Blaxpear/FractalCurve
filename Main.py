@@ -2,18 +2,15 @@ from Vertex import Vertex
 from Shape import Shape
 from Environment import Environment
 from Settings import Settings
+from math import pi, sqrt
 
 def main():
-    vtx1 = Vertex(0, 0, 0, 0)
-    vtx2 = Vertex(50, -80, 50, 0)
-    vtx4 = Vertex(100, 0, 100, 0)
-    sh = Shape([vtx1, vtx2, vtx4])
+    d = 100*sqrt(3)/6
+    vtx = ((0, 0), (50, d), (50, -d), (100, 0))
+    sh = Shape([Vertex(x, y) for x, y in vtx])
 
     s = Settings('settings.ini')
     e = Environment(sh, s)
     e.runmode()
-
-
-
 
 main()

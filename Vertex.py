@@ -5,13 +5,24 @@ class Vertex:
     """
     Object that has position in the shape, and a position on a zero-shape
     """
-    def __init__(self, x, y, x0, y0):
+    def __init__(self, x, y):
         self.x = x
         self.y = y
-        self.x0 = x0
-        self.y0 = y0
-        self.dx = x - x0
-        self.dy = y - y0
+        self.x0 = None
+        self.y0 = None
+        self.dx = None
+        self.dy = None
+
+    def set_zeropos(self, x, y):
+        """
+        Set zero stage position
+        :param x: x
+        :param y: y
+        """
+        self.x0 = x
+        self.y0 = y
+        self.dx = self.x - self.x0
+        self.dy = self.y - self.y0
 
     def pos(self, stage=1):
         """

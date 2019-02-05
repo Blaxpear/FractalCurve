@@ -11,8 +11,9 @@ class Shape:
         :param vtxlist: list of vertices
         """
         self.length = vtxlist[0].distanceTo(vtxlist[-1])
-        self.links = []
         self.vtx = vtxlist
+        self.set_zeroshape()
+        self.links = []
         self.link_adjacent()
 
     def link_adjacent(self):
@@ -64,4 +65,11 @@ class Shape:
         for i in range(len(self.links)):
             graphics.draw_line(self.vtx[i].pos(stage), self.vtx[i+1].pos(stage), stage)
 
-
+    def set_zeroshape(self):
+        """
+        Set zero shape position for each vertex
+        """
+        vtxamount = len(self.vtx)
+        dx = self.length/(vtxamount-1)
+        for i in range(vtxamount):
+            self.vtx[i].set_zeropos(i*dx, 0)
