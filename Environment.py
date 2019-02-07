@@ -2,7 +2,7 @@ import pygame
 import time
 import imageio
 from os import listdir, remove
-from os.path import  isfile, join
+from os.path import isfile, join
 from math import ceil
 from Graphics import Graphics
 

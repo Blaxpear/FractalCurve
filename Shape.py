@@ -40,25 +40,28 @@ class Shape:
         :param stage: stage
         :param graphics: graphics object to draw onto
         """
-        graphics.csstack.push()
         if stage == 0:
-            #draw zero-shape
+            # draw zero-shape, aka a line from first to last vertex
             graphics.draw_line(self.vtx[0].pos(0), self.vtx[-1].pos(0), stage)
         elif stage < 1:
-            #draw shape in transition
             self.draw_transitional(stage, graphics)
         else:
-            #draw next shape onto each link
+            # push coordinate system of this shape
+            graphics.csstack.push()
+
             next_stage = stage - 1
             for link in self.links:
                 link.draw(next_stage, graphics)
-                graphics.csstack.pop()
+                # revert coordinate space that was altered by the link
+                # to equal the coordinate space of this shape
                 graphics.csstack.revert()
+            # remove the coordinate space of this shape from the stack
+            graphics.csstack.pop()
 
 
     def draw_transitional(self, stage, graphics):
         """
-        Draw lines between vetrices at given stage position
+        Draw the shape in transition from a line to the full shape
         :param stage: stage
         :param graphics: graphics object to draw onto
         """

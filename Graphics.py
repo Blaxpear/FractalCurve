@@ -11,7 +11,7 @@ class Graphics:
     def __init__(self, root, surface, settings):
         """
         Initialize graphics
-        :param root: first shape to draw
+        :param root: the shape object that the fractal repeats
         :param surface: pygame surface object to draw on
         :param settings: settings object
         :param initialstage: initial stage
@@ -29,7 +29,7 @@ class Graphics:
 
     def resetview(self):
         """
-        Reset view zoom and pan into ini file values
+        Reset view zoom and reset origin into ini file values
         :return:
         """
         angle = self.settings.getitem("Graphics", "angle", float)
@@ -54,16 +54,15 @@ class Graphics:
 
     def redraw(self):
         """
-        Clear surface and redraw fractal
+        Redraw fractal
         """
         self.draw_bg()
         self.root.draw(self.stage, self)
         self.drawstagecounter()
-        self.csstack.pop()
 
     def draw_bg(self):
         """
-        Clear screen and draw origin
+        Clear screen and draw origin if they are set true in settings
         """
         if self.clearframe:
             self.surf.fill((0, 0, 0))
@@ -142,7 +141,9 @@ class Graphics:
                 if colorstages[i] <= stage < colorstages[i + 1]:
                     RGB1 = colors[i]
                     RGB2 = colors[i+1]
-                    D_RGB = [RGB2[0] - RGB1[0], RGB2[1] - RGB1[1], RGB2[2] - RGB1[2]]
+                    D_RGB = [RGB2[0] - RGB1[0],
+                             RGB2[1] - RGB1[1],
+                             RGB2[2] - RGB1[2]]
                     stageremainder = stage - colorstages[i]
                     stagegapsize = colorstages[i+1] - colorstages[i]
                     p = stageremainder/stagegapsize
