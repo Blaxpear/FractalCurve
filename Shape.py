@@ -34,22 +34,24 @@ class Shape:
         scale = d / self.length
         return Link(vtx1, vtx2, scale, self)
 
-    def draw(self, stage, graphics):
+    def draw(self, stage, graphics)-> bool:
         """
         Draw shape in given stage
         :param stage: stage
         :param graphics: graphics object to draw onto
+        :return: True if this was the last shape to draw
         """
         if stage == 0:
             # draw zero-shape, aka a line from first to last vertex
             graphics.draw_line(self.vtx[0].pos(0), self.vtx[-1].pos(0), stage)
+            return True
         elif stage < 1:
             self.draw_transitional(stage, graphics)
+            return True
         else:
             # push coordinate system of this shape
             graphics.csstack.push()
-
-
+            # draw shape onto every link
             for link in self.links:
                 link.draw(stage, graphics)
                 # revert coordinate space that was altered by the link
@@ -57,6 +59,7 @@ class Shape:
                 graphics.csstack.revert()
             # remove the coordinate space of this shape from the stack
             graphics.csstack.pop()
+            return False
 
 
     def draw_transitional(self, stage, graphics):

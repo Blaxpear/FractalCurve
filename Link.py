@@ -18,4 +18,8 @@ class Link:
 
         next_stage = stage - 1
 
-        self.shape.draw(next_stage, graphics)
+        lastShape = self.shape.draw(next_stage, graphics)
+
+        if lastShape:
+            # this link is a top link at current stage
+            graphics.add_toplink(self)

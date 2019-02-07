@@ -18,11 +18,13 @@ class Graphics:
         """
         self.clearframe = settings.getitem("Graphics", "clearframe", str) == "True"
         self.root = root
+        self.toplinks = []
         self.stage = None
         self.surf = surface
         self.settings = settings
         self.cs = Coordinatespace(0, 1, (0, 0))
         self.csstack = CSStack(self.cs)
+        self.screencs = None
         self.resetview()
         self.font = pygame.font.SysFont("Consolas", 12)
         self.draworigin = settings.getitem("Graphics", "draworigin", str) == "True"
@@ -57,6 +59,7 @@ class Graphics:
         Redraw fractal
         """
         self.draw_bg()
+        #TODO: draw toplinks
         self.root.draw(self.stage, self)
         self.drawstagecounter()
 
@@ -123,6 +126,20 @@ class Graphics:
                          (screen_pos2[0], screen_pos2[1]),
                          1)
 
+    def add_toplink(self, link):
+        """
+        Create a TopLink object from link
+        :param link: link that draws the last shape at current stage
+        """
+        self.toplinks.append(TopLink(link.shape, self.cs))
+
+    def reset_toplinks(self):
+        """
+        Delete all elements in toplinks list.
+        This needs to be executed every time stage passes whole numbers
+        """
+        self.toplinks = []
+
     def get_gradient_color(self, stage):
         """
         Get color from gradient.
@@ -151,3 +168,37 @@ class Graphics:
                     g = min(max(0, RGB1[1] + D_RGB[1]*p), 255)
                     b = min(max(0, RGB1[2] + D_RGB[2]*p), 255)
                     return [r, g, b]
+
+class TopLink:
+    """
+    Class for storing an object behaving like a link that draws the
+    last shape at some certain stage. This can be used to optimize
+    recursion, because top links change only when stage passes whole
+    numbers.
+
+    If you calculate a list of top links (the links that draw the last
+    shape) every time the stage passes a whole number, you can then
+    use the list of top links to draw the shapes, instead of recursively
+    calculating each last link during every frame.
+    """
+    def __init__(self, shape, coordinatespace):
+        """
+        :param shape: shape that this link will draw
+        :param coordinatespace:
+        coordinate space that the shape will be drawn
+        on relative to the very first coordinate space
+        of the root shape
+        """
+        self.shape = shape
+        self.coordinatespace = coordinatespace
+
+    def draw(self, stage, graphics):
+        """
+        Change graphics' coordinate space equal to the coordinate
+        space of this toplink and draw shape in given stage
+        :param stage: stage
+        :param graphics: graphics object to draw onto
+        """
+        graphics.cs.make_equal(self.coordinatespace)
+
+        self.shape.draw(stage, graphics)
