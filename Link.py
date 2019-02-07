@@ -12,8 +12,10 @@ class Link:
 
     def draw(self, stage, graphics):
 
-        graphics.cs.set_origin(self.vtx1.pos(stage+1))
+        graphics.cs.set_origin(self.vtx1.pos(stage))
         graphics.cs.rotate(self.angle)
         graphics.cs.scale(self.scale)
 
-        self.shape.draw(stage, graphics)
+        next_stage = stage - 1
+
+        self.shape.draw(next_stage, graphics)

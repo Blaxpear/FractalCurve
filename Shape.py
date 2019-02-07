@@ -49,9 +49,9 @@ class Shape:
             # push coordinate system of this shape
             graphics.csstack.push()
 
-            next_stage = stage - 1
+
             for link in self.links:
-                link.draw(next_stage, graphics)
+                link.draw(stage, graphics)
                 # revert coordinate space that was altered by the link
                 # to equal the coordinate space of this shape
                 graphics.csstack.revert()
