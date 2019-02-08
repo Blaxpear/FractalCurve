@@ -25,7 +25,7 @@ class Graphics:
         self.cs = Coordinatespace(0, 1, (0, 0))
         self.csstack = CSStack(self.cs)
         self.screencs = None
-        self.resetview()
+        self.reset_view()
         self.font = pygame.font.SysFont("Consolas", 12)
         self.draworigin = settings.getitem("Graphics", "draworigin", str) == "True"
 
@@ -59,9 +59,28 @@ class Graphics:
         Redraw fractal
         """
         self.draw_bg()
-        #TODO: draw toplinks
+
         self.root.draw(self.stage, self)
-        self.drawstagecounter()
+        self.draw_stagecounter()
+
+    def reset_view(self):
+        """
+        Reset view zoom and reset origin into ini file values
+        :return:
+        """
+        angle = self.settings.getitem("Graphics", "angle", float)
+        scale = self.settings.getitem("Graphics", "scale", float)
+        originsetting = self.settings.getitem("Graphics", "origin", str)
+        if originsetting == 'fit':
+            d = self.root.length*scale
+            res = self.settings.getlist("System", "resolution", int)
+            x = (res[0] - d)/2
+            y = res[1]/2
+            origin = (x, y)
+        else:
+            origin = self.settings.getlist("Graphics", "origin", float)
+
+        self.screencs = Coordinatespace(angle, scale, origin)
 
     def draw_bg(self):
         """
@@ -79,32 +98,12 @@ class Graphics:
         self.draw_line((0, 10), (0,-10), color=(255, 0, 0))
         self.draw_line((10, 0), (-10, 0), color=(255, 0, 0))
 
-    def drawstagecounter(self):
+    def draw_stagecounter(self):
         """
         Draw stage number to the top left corner
         """
         tesxsurf = self.font.render("{:.4f}".format(self.stage), False, (255, 255, 255))
         self.surf.blit(tesxsurf, (0,0))
-
-    def drag_screen(self, amount):
-        """
-        Move screen coordinate space origin by amount. In other words drag the whole screen by amount.
-        :param amount: (dx, dy)
-        """
-        o = self.screencs.origin
-        self.screencs.origin = (o[0] + amount[0], o[1] + amount[1])
-
-    def zoom_screen(self, p):
-        """
-        Scale screen coordinate space by p.
-        :param p: percentage to scale.
-        Examples
-        p = 1: 100%, nothing happens
-        p = 2: 200%, zoom in to twice the current scale
-        p = 0.5: 50%, zoom out to half the current scale
-        """
-        #TODO: zoomin into a point
-        self.screencs.scale(p)
 
     def draw_line(self, pos1, pos2, stage, color=None):
         """
@@ -125,20 +124,6 @@ class Graphics:
                          (screen_pos1[0], screen_pos1[1]),
                          (screen_pos2[0], screen_pos2[1]),
                          1)
-
-    def add_toplink(self, link):
-        """
-        Create a TopLink object from link
-        :param link: link that draws the last shape at current stage
-        """
-        self.toplinks.append(TopLink(link.shape, self.cs))
-
-    def reset_toplinks(self):
-        """
-        Delete all elements in toplinks list.
-        This needs to be executed every time stage passes whole numbers
-        """
-        self.toplinks = []
 
     def get_gradient_color(self, stage):
         """
@@ -168,6 +153,40 @@ class Graphics:
                     g = min(max(0, RGB1[1] + D_RGB[1]*p), 255)
                     b = min(max(0, RGB1[2] + D_RGB[2]*p), 255)
                     return [r, g, b]
+
+    def drag_screen(self, amount):
+        """
+        Move screen coordinate space origin by amount. In other words drag the whole screen by amount.
+        :param amount: (dx, dy)
+        """
+        o = self.screencs.origin
+        self.screencs.origin = (o[0] + amount[0], o[1] + amount[1])
+
+    def zoom_screen(self, p):
+        """
+        Scale screen coordinate space by p.
+        :param p: percentage to scale.
+        Examples
+        p = 1: 100%, nothing happens
+        p = 2: 200%, zoom in to twice the current scale
+        p = 0.5: 50%, zoom out to half the current scale
+        """
+        #TODO: zoomin into a point
+        self.screencs.scale(p)
+
+    def add_toplink(self, link):
+        """
+        Create a TopLink object from link
+        :param link: link that draws the last shape at current stage
+        """
+        self.toplinks.append(TopLink(link.shape, self.cs))
+
+    def reset_toplinks(self):
+        """
+        Delete all elements in toplinks list.
+        This needs to be executed every time stage passes whole numbers
+        """
+        self.toplinks = []
 
 class TopLink:
     """

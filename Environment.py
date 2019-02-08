@@ -6,6 +6,7 @@ from os.path import isfile, join
 from math import ceil
 from Graphics import Graphics
 
+
 class Environment:
     """
     Class for handling pycharm
@@ -66,11 +67,23 @@ class Environment:
                     stage_n = ceil(self.graphics.stage)
                     print("{:.10f}%".format(float(n_drawn/self.total_lines)))
             self.updateFrame()
+
             if self.export:
                 self.exportScreen("tmp", self.graphics.stage)
+
             time.sleep(0.01)
+
         if self.export:
             self.exportToGif("animation.gif")
+
+    def updateFrame(self, ):
+        """
+        Handle events for a new frame
+        """
+        self.doevents()
+        if self.autodraw:
+            self.graphics.redraw()
+        pygame.display.update()
 
     def exportToGif(self, name):
         files = [f for f in listdir("./tmp") if isfile(join("./tmp", f))]
@@ -79,7 +92,6 @@ class Environment:
             images.append(imageio.imread('./tmp/'+file))
             remove('./tmp/'+file)
         imageio.mimsave(name, images, duration=0.001)
-
 
     def exportScreen(self, folder, stage):
         pygame.image.save(self.surf, "{}/frame{}.jpeg".format(folder, stage))
@@ -92,15 +104,6 @@ class Environment:
         """
         linesinshape = len(self.graphics.root.links)
         return linesinshape ** ceil(stage)
-
-    def updateFrame(self):
-        """
-        Handle events for a new frame
-        """
-        self.doevents()
-        if self.autodraw:
-            self.graphics.redraw()
-        pygame.display.update()
 
     def doevents(self):
         """
@@ -119,6 +122,6 @@ class Environment:
                     self.graphics.zoom_screen(1/1.1)
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_F1:
-                    self.graphics.resetview()
+                    self.graphics.reset_view()
                 if event.key == pygame.K_F5:
                     self.graphics.redraw()
