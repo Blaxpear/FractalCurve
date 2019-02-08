@@ -60,8 +60,8 @@ class Environment:
         self.graphics.stage = start
         stage_n = ceil(start)
         while not self.exited:
-            if self.graphics.stage < end - speed or end == -1:
-                self.graphics.advancestage(speed)
+            if self.graphics.stage < end or end == -1:
+                self.graphics.advancestage(speed, end)
                 if stage_n != ceil(self.graphics.stage):
                     n_drawn = self.linestodraw(stage_n)
                     stage_n = ceil(self.graphics.stage)

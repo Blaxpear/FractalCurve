@@ -29,30 +29,11 @@ class Graphics:
         self.font = pygame.font.SysFont("Consolas", 12)
         self.draworigin = settings.getitem("Graphics", "draworigin", str) == "True"
 
-    def resetview(self):
+    def advancestage(self, amount, end):
         """
-        Reset view zoom and reset origin into ini file values
-        :return:
+        Add amount to current stage. Clamp stage to end.
         """
-        angle = self.settings.getitem("Graphics", "angle", float)
-        scale = self.settings.getitem("Graphics", "scale", float)
-        originsetting = self.settings.getitem("Graphics", "origin", str)
-        if originsetting == 'fit':
-            d = self.root.length*scale
-            res = self.settings.getlist("System", "resolution", int)
-            x = (res[0] - d)/2
-            y = res[1]/2
-            origin = (x, y)
-        else:
-            origin = self.settings.getlist("Graphics", "origin", float)
-
-        self.screencs = Coordinatespace(angle, scale, origin)
-
-    def advancestage(self, amount):
-        """
-        Add amount to current stage
-        """
-        self.stage += amount
+        self.stage = min(self.stage + amount, end)
 
     def redraw(self):
         """
