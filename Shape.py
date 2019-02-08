@@ -23,7 +23,7 @@ class Shape:
         for i in range(len(self.vtx) - 1):
             self.links.append(self.link(self.vtx[i], self.vtx[i + 1]))
 
-    def link(self, vtx1, vtx2):
+    def link(self, vtx1, vtx2) -> Link:
         """
         Return a link between these vertices
         :param vtx1: first vertex
@@ -34,18 +34,18 @@ class Shape:
         scale = d / self.length
         return Link(vtx1, vtx2, scale, self)
 
-    def draw(self, stage, graphics)-> bool:
+    def draw(self, stage, graphics) -> bool:
         """
-        Draw shape in given stage
+        Draw shape in given stage and assign top links
         :param stage: stage
-        :param graphics: graphics object to draw onto
+        :param graphics: graphics object
         :return: True if this was the last shape to draw
         """
         if stage == 0:
             # draw zero-shape, aka a line from first to last vertex
             graphics.draw_line(self.vtx[0].pos(0), self.vtx[-1].pos(0), stage)
             return True
-        elif stage < 1:
+        elif stage <= 1:
             self.draw_transitional(stage, graphics)
             return True
         else:

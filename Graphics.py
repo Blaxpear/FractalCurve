@@ -1,6 +1,9 @@
 import pygame
+from copy import deepcopy
+from math import trunc
 from CoordinateSpace import Coordinatespace
 from CoordinateSpaceStack import CSStack
+from Link import Link
 
 
 
@@ -35,13 +38,27 @@ class Graphics:
         """
         self.stage = min(self.stage + amount, end)
 
-    def redraw(self):
+    def redraw(self, new_toplinks):
         """
         Redraw fractal
+        :param new_toplinks:
+        if True, recalculate and assign top links
+        if False, draw shapes onto top links
         """
         self.draw_bg()
 
-        self.root.draw(self.stage, self)
+        if new_toplinks:
+            self.reset_toplinks()
+            firstShape = self.root.draw(self.stage, self)
+            if firstShape:
+                # create a top link for the first shape
+                self.add_toplink(Link(self.root.vtx[0],
+                                      self.root.vtx[-1],
+                                      1,
+                                      self.root))
+        else:
+            self.draw_toplinks()
+
         self.draw_stagecounter()
 
     def reset_view(self):
@@ -169,6 +186,17 @@ class Graphics:
         """
         self.toplinks = []
 
+    def draw_toplinks(self):
+        """
+        Draw shapes onto top links.
+        Top links must be assigned before calling this function.
+        """
+        self.csstack.push()
+        for toplink in self.toplinks:
+            toplink.draw(self.stage, self)
+        self.csstack.revert()
+        self.csstack.pop()
+
 class TopLink:
     """
     Class for storing an object behaving like a link that draws the
@@ -190,7 +218,7 @@ class TopLink:
         of the root shape
         """
         self.shape = shape
-        self.coordinatespace = coordinatespace
+        self.coordinatespace = deepcopy(coordinatespace)
 
     def draw(self, stage, graphics):
         """
@@ -199,6 +227,12 @@ class TopLink:
         :param stage: stage
         :param graphics: graphics object to draw onto
         """
+        # this is the last link so only draw the shape
+        # according to the decimal places
+        if stage % 1 > 0:
+            stage = stage % 1
+        else:
+            # if remainder is zero, draw full stage
+            stage = 1
         graphics.cs.make_equal(self.coordinatespace)
-
         self.shape.draw(stage, graphics)

@@ -58,15 +58,16 @@ class Environment:
         :param speed: how much stage changes each frame
         """
         self.graphics.stage = start
-        stage_n = ceil(start)
+        stage_ceil = ceil(start)
         while not self.exited:
-            if self.graphics.stage < end or end == -1:
+            if self.graphics.stage <= end or end == -1:
                 self.graphics.advancestage(speed, end)
-                if stage_n != ceil(self.graphics.stage):
-                    n_drawn = self.linestodraw(stage_n)
-                    stage_n = ceil(self.graphics.stage)
-                    print("{:.10f}%".format(float(n_drawn/self.total_lines)))
-            self.updateFrame()
+                if stage_ceil != ceil(self.graphics.stage):
+                    # stage has passed a whole number
+                    stage_ceil = ceil(self.graphics.stage)
+                    self.updateFrame(True)
+                else:
+                    self.updateFrame(False)
 
             if self.export:
                 self.exportScreen("tmp", self.graphics.stage)
@@ -76,13 +77,16 @@ class Environment:
         if self.export:
             self.exportToGif("animation.gif")
 
-    def updateFrame(self, ):
+    def updateFrame(self, new_toplinks=True):
         """
         Handle events for a new frame
+        :param new_toplinks:
+        to optimize code, set false when stage has not passed a
+        whole number since last frame
         """
         self.doevents()
         if self.autodraw:
-            self.graphics.redraw()
+            self.graphics.redraw(new_toplinks)
         pygame.display.update()
 
     def exportToGif(self, name):
@@ -104,6 +108,15 @@ class Environment:
         """
         linesinshape = len(self.graphics.root.links)
         return linesinshape ** ceil(stage)
+
+    def print_progress(self):
+        """
+        Print the percetage of lines being drawn now compared to
+        the amount of lines to be drawn when last stage has been
+        reached.
+        """
+        n_drawn = self.linestodraw(self.graphics.stage)
+        print("{:.10f}%".format(float(n_drawn/self.total_lines)))
 
     def doevents(self):
         """
