@@ -5,8 +5,10 @@ from Settings import Settings
 from math import pi, sqrt
 
 def main():
-    d = 100*sqrt(3)/6
-    vtx = ((0, 0), (50, d), (50, -d), (100, 0))
+    c = sqrt(3)/2
+    d = 25
+    h = 25
+    vtx = ((0, 0), (d, 0), (d, h), (100-d, h), (100-d, 0), (100, 0))
     sh = Shape([Vertex(x, y) for x, y in vtx])
 
     s = Settings('settings.ini')

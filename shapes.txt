@@ -1,0 +1,20 @@
+reminds a space ship after a few stages. cool with symmetric gradients
+d = 100/3.0
+vtx = ((0, 0), (0, 100), (d,100), (50,100),(2*d,100), (100,100), (100, 0))
+colors =  0,255,255 ; 0,0,0 ; 0,255,0 ; 0,0,0 ; 0,255,255
+colorstages = 0 ; 0.1; 0.5; 0.9 ; 1
+
+spiraling wave
+vtx = ((0, 0), (0, 100), (0, 0), (100, 0))
+
+a REALLY cool pulsing triangle
+c = sqrt(3)/2
+vtx = ((0, 0), (100, 0), (50, c*100), (0,0), (100, 0))
+colors =  0,255,255 ; 0,0,0 ; 0,255,0 ; 0,0,0 ; 0,255,255
+colorstages = 0 ; 0.1; 0.5; 0.9 ; 1
+
+cone with crosses
+d = 25
+h = 25
+vtx = ((0, 0), (d, 0), (d, h), (100-d, h), (100-d, 0), (100, 0))
+sh = Shape([Vertex(x, y) for x, y in vtx])
