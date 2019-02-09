@@ -23,6 +23,8 @@ class Graphics:
         self.root = root
         self.toplinks = []
         self.stage = None
+        self.colorstages = settings.getlist("Graphics", "colorstages", float)
+        self.colors = settings.getlist2d("Graphics", "colors", float)
         self.surf = surface
         self.settings = settings
         self.cs = Coordinatespace(0, 1, (0, 0))
@@ -125,32 +127,32 @@ class Graphics:
 
     def get_gradient_color(self, stage):
         """
-        Get color from gradient.
-        Gradient changes linearly between two adjacent colorstages and their corresponding color.
+        Get color from gradient at given stage.
+        Gradient color changes linearly between two adjacent
+        color stages and their corresponding color.
+        If colors list contains only one color, return that
         :param stage: stage
         :return: [R, G, B] color from gradient at given stage
         """
-        colorstages = self.settings.getlist("Graphics", "colorstages", float)
-        colors = self.settings.getlist2d("Graphics", "colors", float)
-        if len(colors) == 1:
-            return colors[0]
+        if len(self.colors) == 1:
+            return self.colors[0]
         else:
             if stage == 1:
-                return colors[-1]
-            for i in range(len(colors)):
-                if colorstages[i] <= stage < colorstages[i + 1]:
-                    RGB1 = colors[i]
-                    RGB2 = colors[i+1]
+                return self.colors[-1]
+            for i in range(len(self.colors)):
+                if self.colorstages[i] <= stage < self.colorstages[i + 1]:
+                    RGB1 = self.colors[i]
+                    RGB2 = self.colors[i+1]
                     D_RGB = [RGB2[0] - RGB1[0],
                              RGB2[1] - RGB1[1],
                              RGB2[2] - RGB1[2]]
-                    stageremainder = stage - colorstages[i]
-                    stagegapsize = colorstages[i+1] - colorstages[i]
+                    stageremainder = stage - self.colorstages[i]
+                    stagegapsize = self.colorstages[i+1] - self.colorstages[i]
                     p = stageremainder/stagegapsize
                     r = min(max(0, RGB1[0] + D_RGB[0]*p), 255)
                     g = min(max(0, RGB1[1] + D_RGB[1]*p), 255)
                     b = min(max(0, RGB1[2] + D_RGB[2]*p), 255)
-                    return [r, g, b]
+                    return r, g, b
 
     def drag_screen(self, amount):
         """
