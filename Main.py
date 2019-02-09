@@ -3,6 +3,7 @@ from Shape import Shape
 from Environment import Environment
 from Settings import Settings
 from math import pi, sqrt
+import cProfile
 
 def main():
     d = 100*sqrt(3)/6
@@ -11,6 +12,12 @@ def main():
 
     s = Settings('settings.ini')
     e = Environment(sh, s)
+
+    pr = cProfile.Profile()
+    pr.enable()
     e.runmode()
+    pr.disable()
+    pr.print_stats(sort="time")
+
 
 main()

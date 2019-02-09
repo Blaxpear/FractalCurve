@@ -143,9 +143,9 @@ class Graphics:
                 if self.colorstages[i] <= stage < self.colorstages[i + 1]:
                     RGB1 = self.colors[i]
                     RGB2 = self.colors[i+1]
-                    D_RGB = [RGB2[0] - RGB1[0],
+                    D_RGB = (RGB2[0] - RGB1[0],
                              RGB2[1] - RGB1[1],
-                             RGB2[2] - RGB1[2]]
+                             RGB2[2] - RGB1[2])
                     stageremainder = stage - self.colorstages[i]
                     stagegapsize = self.colorstages[i+1] - self.colorstages[i]
                     p = stageremainder/stagegapsize

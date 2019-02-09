@@ -67,6 +67,8 @@ class Coordinatespace:
         """
         s = math.sin(theta)
         c = math.cos(theta)
-        xr = c * (x-xo) - s * (y-yo) + xo
-        yr = s * (x-xo) + c * (y-yo) + yo
-        return [xr, yr]
+        dy = y-yo
+        dx = x-xo
+        xr = c * dx - s * dy + xo
+        yr = s * dx + c * dy + yo
+        return xr, yr
