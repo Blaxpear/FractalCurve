@@ -19,26 +19,30 @@ class Graphics:
         :param settings: settings object
         :param initialstage: initial stage
         """
+        self.settings = settings
         self.clearframe = settings.getitem("Graphics", "clearframe", str) == "True"
+        self.font = pygame.font.SysFont("Consolas", 12)
+        self.draworigin = settings.getitem("Graphics", "draworigin", str) == "True"
+        self.mirror = settings.getitem("Graphics", "mirror", str)
+        self.colorstages = settings.getlist("Graphics", "colorstages", float)
+        self.colors = settings.getlist2d("Graphics", "colors", float)
         self.root = root
         self.toplinks = []
         self.stage = None
-        self.colorstages = settings.getlist("Graphics", "colorstages", float)
-        self.colors = settings.getlist2d("Graphics", "colors", float)
         self.surf = surface
-        self.settings = settings
         self.cs = Coordinatespace(0, 1, (0, 0))
         self.csstack = CSStack(self.cs)
         self.screencs = None
         self.reset_view()
-        self.font = pygame.font.SysFont("Consolas", 12)
-        self.draworigin = settings.getitem("Graphics", "draworigin", str) == "True"
 
     def advancestage(self, amount, end):
         """
         Add amount to current stage. Clamp stage to end.
         """
-        self.stage = min(self.stage + amount, end)
+        if end == -1:
+            self.stage += amount
+        else:
+            self.stage = min(self.stage + amount, end)
 
     def redraw(self, new_toplinks):
         """
@@ -95,8 +99,8 @@ class Graphics:
         """
         Draw a 20 by 20 red cross in the origin
         """
-        self.draw_line((0, 10), (0,-10), color=(255, 0, 0))
-        self.draw_line((10, 0), (-10, 0), color=(255, 0, 0))
+        self.draw_local((0, 10), (0, -10), color=(255, 0, 0))
+        self.draw_local((10, 0), (-10, 0), color=(255, 0, 0))
 
     def draw_stagecounter(self):
         """
@@ -105,7 +109,7 @@ class Graphics:
         tesxsurf = self.font.render("{:.4f}".format(self.stage), False, (255, 255, 255))
         self.surf.blit(tesxsurf, (0,0))
 
-    def draw_line(self, pos1, pos2, stage, color=None):
+    def draw_local(self, pos1, pos2, stage, color=None):
         """
         Draw a line using local coordinate system by converting pos1 and pos2 into global coordinates
         :param pos1: local point
@@ -117,13 +121,31 @@ class Graphics:
             color = self.get_gradient_color(stage)
         global_pos1 = self.cs.get_global_pos(pos1)
         global_pos2 = self.cs.get_global_pos(pos2)
-        screen_pos1 = self.screencs.get_global_pos(global_pos1)
-        screen_pos2 = self.screencs.get_global_pos(global_pos2)
+        self.draw_gobal(global_pos1, global_pos2, color)
+
+        if "y" in self.mirror:
+            global_pos1 = global_pos1[0], -global_pos1[1]
+            global_pos2 = global_pos2[0], -global_pos2[1]
+        if "x" in self.mirror:
+            global_pos1 = -global_pos1[0], global_pos1[1]
+            global_pos2 = -global_pos2[0], global_pos2[1]
+            self.draw_gobal(global_pos1, global_pos2, color)
+
+    def draw_gobal(self, pos1, pos2, color):
+        """
+        Draw line using global coordinate system
+        :param pos1: global point
+        :param pos2: global point
+        :param color: line color
+        """
+        screen_pos1 = self.screencs.get_global_pos(pos1)
+        screen_pos2 = self.screencs.get_global_pos(pos2)
         pygame.draw.line(self.surf,
                          color,
                          (screen_pos1[0], screen_pos1[1]),
                          (screen_pos2[0], screen_pos2[1]),
                          1)
+
 
     def get_gradient_color(self, stage):
         """

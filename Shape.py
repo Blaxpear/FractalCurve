@@ -43,7 +43,7 @@ class Shape:
         """
         if stage == 0:
             # draw zero-shape, aka a line from first to last vertex
-            graphics.draw_line(self.vtx[0].pos(0), self.vtx[-1].pos(0), stage)
+            graphics.draw_local(self.vtx[0].pos(0), self.vtx[-1].pos(0), stage)
             return True
         elif stage <= 1:
             self.draw_transitional(stage, graphics)
@@ -69,7 +69,7 @@ class Shape:
         :param graphics: graphics object to draw onto
         """
         for i in range(len(self.links)):
-            graphics.draw_line(self.vtx[i].pos(stage), self.vtx[i+1].pos(stage), stage)
+            graphics.draw_local(self.vtx[i].pos(stage), self.vtx[i + 1].pos(stage), stage)
 
     def set_zeroshape(self):
         """
