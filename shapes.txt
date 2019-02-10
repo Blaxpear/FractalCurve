@@ -18,3 +18,5 @@ d = 25
 h = 25
 vtx = ((0, 0), (d, 0), (d, h), (100-d, h), (100-d, 0), (100, 0))
 sh = Shape([Vertex(x, y) for x, y in vtx])
+colors =  0,0,0 ; 255,0,0 ; 255,200,0
+colorstages = 0 ; 0.9 ; 1

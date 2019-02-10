@@ -122,13 +122,13 @@ class Graphics:
         global_pos1 = self.cs.get_global_pos(pos1)
         global_pos2 = self.cs.get_global_pos(pos2)
         self.draw_gobal(global_pos1, global_pos2, color)
-
-        if "y" in self.mirror:
-            global_pos1 = global_pos1[0], -global_pos1[1]
-            global_pos2 = global_pos2[0], -global_pos2[1]
-        if "x" in self.mirror:
-            global_pos1 = -global_pos1[0], global_pos1[1]
-            global_pos2 = -global_pos2[0], global_pos2[1]
+        if "y" in self.mirror or "x" in self.mirror:
+            if "y" in self.mirror:
+                global_pos1 = global_pos1[0], -global_pos1[1]
+                global_pos2 = global_pos2[0], -global_pos2[1]
+            if "x" in self.mirror:
+                global_pos1 = -global_pos1[0], global_pos1[1]
+                global_pos2 = -global_pos2[0], global_pos2[1]
             self.draw_gobal(global_pos1, global_pos2, color)
 
     def draw_gobal(self, pos1, pos2, color):
