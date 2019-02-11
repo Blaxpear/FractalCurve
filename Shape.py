@@ -21,9 +21,12 @@ class Shape:
         Link each vertex to the one next to it
         """
         for i in range(len(self.vtx) - 1):
-            self.links.append(self.link(self.vtx[i], self.vtx[i + 1]))
+            if i % 1 == 0:
+                self.links.append(self.link(self.vtx[i], self.vtx[i + 1], mirror_y=False))
+            else:
+                self.links.append(self.link(self.vtx[i], self.vtx[i + 1]))
 
-    def link(self, vtx1, vtx2) -> Link:
+    def link(self, vtx1, vtx2, mirror_x=False, mirror_y=False) -> Link:
         """
         Return a link between these vertices
         :param vtx1: first vertex
@@ -32,7 +35,7 @@ class Shape:
         """
         d = vtx1.distanceTo(vtx2)
         scale = d / self.length
-        return Link(vtx1, vtx2, scale, self)
+        return Link(vtx1, vtx2, scale, self, mirror_x=mirror_x, mirror_y=mirror_y)
 
     def draw(self, stage, graphics) -> bool:
         """
@@ -49,7 +52,7 @@ class Shape:
             self.draw_transitional(stage, graphics)
             return True
         else:
-            # push coordinate system of this shape
+            # push coordinate space of this shape
             graphics.csstack.push()
             # draw shape onto every link
             for link in self.links:

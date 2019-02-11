@@ -221,7 +221,7 @@ class Graphics:
         self.csstack.revert()
         self.csstack.pop()
 
-class TopLink:
+class TopLink():
     """
     Class for storing an object behaving like a link that draws the
     last shape at some certain stage. This can be used to optimize
@@ -259,4 +259,5 @@ class TopLink:
             # if remainder is zero, draw full stage
             stage = 1
         graphics.cs.make_equal(self.coordinatespace)
+        graphics.draw_local((0,0), (self.shape.length/2, 0), 0, (255,0,0))
         self.shape.draw(stage, graphics)

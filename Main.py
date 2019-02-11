@@ -6,7 +6,7 @@ from math import pi, sqrt
 
 def main():
     c = sqrt(3) / 2
-    vtx = ((0, 0), (0, 100*c), (0, -10), (100, 0))
+    vtx = ((0, 0), (50, 50), (100, 0))
     sh = Shape([Vertex(x, y) for x, y in vtx])
 
     s = Settings('settings.ini')
