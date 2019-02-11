@@ -4,7 +4,7 @@ class Link:
     """
     Single connection between two of the shape's vertices
     """
-    def __init__(self, vtx1, vtx2, scale, shape, mirror_x=False, mirror_y=False):
+    def __init__(self, vtx1, vtx2, scale, shape, mirror_x, mirror_y):
         self.vtx1 = vtx1
         self.vtx2 = vtx2
         self.angle = vtx1.angleTo(vtx2)

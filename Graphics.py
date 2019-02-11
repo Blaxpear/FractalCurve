@@ -61,7 +61,9 @@ class Graphics:
                 self.add_toplink(Link(self.root.vtx[0],
                                       self.root.vtx[-1],
                                       1,
-                                      self.root))
+                                      self.root,
+                                      mirror_x=True,
+                                      mirror_y=False))
         else:
             self.draw_toplinks()
 
