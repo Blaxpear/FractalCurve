@@ -3,6 +3,7 @@ from Shape import Shape
 from Environment import Environment
 from Settings import Settings
 from math import pi, sqrt
+from Debugger import Debugger
 
 def main():
     c = sqrt(3) / 2
@@ -10,7 +11,8 @@ def main():
     sh = Shape([Vertex(x, y) for x, y in vtx])
 
     s = Settings('settings.ini')
-    e = Environment(sh, s)
+    d = Debugger(s)
+    e = Environment(sh, s, d)
     e.runmode()
 
 main()

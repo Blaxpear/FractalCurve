@@ -1,24 +1,24 @@
 import pygame
-from copy import deepcopy
 from math import pi
 from CoordinateSpace import Coordinatespace
 from CoordinateSpaceStack import CSStack
 from Link import Link
-
+from Toplink import TopLink
 
 
 class Graphics:
     """
     Class for drawing
     """
-    def __init__(self, root, surface, settings):
+    def __init__(self, root, surface, settings, debugger):
         """
         Initialize graphics
         :param root: the shape object that the fractal repeats
         :param surface: pygame surface object to draw on
-        :param settings: settings object
+        :param settings: reference to Settings object
         :param initialstage: initial stage
         """
+        self.debug = debugger
         self.settings = settings
         self.clearframe = settings.getitem("Graphics", "clearframe", str) == "True"
         self.font = pygame.font.SysFont("Consolas", 12)
@@ -94,15 +94,7 @@ class Graphics:
         """
         if self.clearframe:
             self.surf.fill((0, 0, 0))
-        if self.draworigin:
-            self.draw_origin()
-
-    def draw_origin(self):
-        """
-        Draw a 20 by 20 red cross in the origin
-        """
-        self.draw_global((0, 0), (0, 50), color=(0, 255, 0))
-        self.draw_global((0, 0), (50, 0), color=(255, 0, 0))
+        self.debug.origin()
 
     def draw_stagecounter(self):
         """
@@ -119,6 +111,7 @@ class Graphics:
         :param color: line color
         :param stage: stage for gradient coloring
         """
+        self.debug.local_draw(self.cs, pos1, pos2)
         if color is None:
             color = self.get_gradient_color(stage)
         global_pos1 = self.cs.get_global_pos(pos1)
@@ -140,6 +133,7 @@ class Graphics:
         :param pos2: global point
         :param color: line color
         """
+        self.debug.global_draw(self.cs, pos1, pos2)
         screen_pos1 = self.screencs.get_global_pos(pos1)
         screen_pos2 = self.screencs.get_global_pos(pos2)
         pygame.draw.line(self.surf,
@@ -203,7 +197,7 @@ class Graphics:
         Create a TopLink object from link
         :param link: link that draws the last shape at current stage
         """
-        self.toplinks.append(TopLink(link.shape, self.cs))
+        self.toplinks.append(TopLink(link.shape, self.cs, self.debug))
 
     def reset_toplinks(self):
         """
@@ -222,44 +216,3 @@ class Graphics:
             toplink.draw(self.stage, self)
         self.csstack.revert()
         self.csstack.pop()
-
-class TopLink():
-    """
-    Class for storing an object behaving like a link that draws the
-    last shape at some certain stage. This can be used to optimize
-    recursion, because top links change only when stage passes whole
-    numbers.
-
-    If you calculate a list of top links (the links that draw the last
-    shape) every time the stage passes a whole number, you can then
-    use the list of top links to draw the shapes, instead of recursively
-    calculating each last link during every frame.
-    """
-    def __init__(self, shape, coordinatespace):
-        """
-        :param shape: shape that this link will draw
-        :param coordinatespace:
-        coordinate space that the shape will be drawn
-        on relative to the very first coordinate space
-        of the root shape
-        """
-        self.shape = shape
-        self.coordinatespace = deepcopy(coordinatespace)
-
-    def draw(self, stage, graphics):
-        """
-        Change graphics' coordinate space equal to the coordinate
-        space of this toplink and draw shape in given stage
-        :param stage: stage
-        :param graphics: graphics object to draw onto
-        """
-        # this is the last link so only draw the shape
-        # according to the decimal places
-        if stage % 1 > 0:
-            stage = stage % 1
-        else:
-            # if remainder is zero, draw full stage
-            stage = 1
-        graphics.cs.make_equal(self.coordinatespace)
-        graphics.draw_local((0,0), (self.shape.length/2, 0), 0, (255,255,255))
-        self.shape.draw(stage, graphics)

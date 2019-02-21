@@ -11,17 +11,22 @@ class Environment:
     """
     Class for handling pycharm
     """
-    def __init__(self, root, settings):
+    def __init__(self, root, settings, debugger):
         """
         Initialize environment
         :param root: Shape to make the fractal from
+        :param settings: reference to Settings object
+        :param debugger: reference to Debugger object
         """
         pygame.init()
         pygame.display.set_caption("Fractal curve generator")
+
         self.settings = settings
         self.surf = pygame.display.set_mode(settings.getlist("System", "resolution", int))
         self.exited = False
-        self.graphics = Graphics(root, self.surf, settings)
+        self.graphics = Graphics(root, self.surf, settings, debugger)
+        self.debug = debugger
+        self.debug.graphics = self.graphics
         self.total_lines = 0
         self.autodraw = settings.getitem("Program", "autodraw", str) == "True"
         self.export = settings.getitem("Program", "export", str) == "True"
