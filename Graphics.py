@@ -1,6 +1,6 @@
 import pygame
 from copy import deepcopy
-from math import trunc
+from math import pi
 from CoordinateSpace import Coordinatespace
 from CoordinateSpaceStack import CSStack
 from Link import Link
@@ -30,7 +30,7 @@ class Graphics:
         self.toplinks = []
         self.stage = None
         self.surf = surface
-        self.cs = Coordinatespace(0, 1, (0, 0))
+        self.cs = Coordinatespace(0, 1, 1, (0, 0))
         self.csstack = CSStack(self.cs)
         self.screencs = None
         self.reset_view()
@@ -62,7 +62,7 @@ class Graphics:
                                       self.root.vtx[-1],
                                       1,
                                       self.root,
-                                      mirror_x=True,
+                                      mirror_x=False,
                                       mirror_y=False))
         else:
             self.draw_toplinks()
@@ -86,7 +86,7 @@ class Graphics:
         else:
             origin = self.settings.getlist("Graphics", "origin", float)
 
-        self.screencs = Coordinatespace(angle, scale, origin)
+        self.screencs = Coordinatespace(angle, scale, -scale, origin)
 
     def draw_bg(self):
         """
@@ -101,8 +101,8 @@ class Graphics:
         """
         Draw a 20 by 20 red cross in the origin
         """
-        self.draw_local((0, 10), (0, -10), color=(255, 0, 0))
-        self.draw_local((10, 0), (-10, 0), color=(255, 0, 0))
+        self.draw_global((0, 0), (0, 50), color=(0, 255, 0))
+        self.draw_global((0, 0), (50, 0), color=(255, 0, 0))
 
     def draw_stagecounter(self):
         """
@@ -111,7 +111,7 @@ class Graphics:
         tesxsurf = self.font.render("{:.4f}".format(self.stage), False, (255, 255, 255))
         self.surf.blit(tesxsurf, (0,0))
 
-    def draw_local(self, pos1, pos2, stage, color=None):
+    def draw_local(self, pos1, pos2, stage=None, color=None):
         """
         Draw a line using local coordinate system by converting pos1 and pos2 into global coordinates
         :param pos1: local point
@@ -123,7 +123,7 @@ class Graphics:
             color = self.get_gradient_color(stage)
         global_pos1 = self.cs.get_global_pos(pos1)
         global_pos2 = self.cs.get_global_pos(pos2)
-        self.draw_gobal(global_pos1, global_pos2, color)
+        self.draw_global(global_pos1, global_pos2, color)
         if "y" in self.mirror or "x" in self.mirror:
             if "y" in self.mirror:
                 global_pos1 = global_pos1[0], -global_pos1[1]
@@ -131,9 +131,9 @@ class Graphics:
             if "x" in self.mirror:
                 global_pos1 = -global_pos1[0], global_pos1[1]
                 global_pos2 = -global_pos2[0], global_pos2[1]
-            self.draw_gobal(global_pos1, global_pos2, color)
+            self.draw_global(global_pos1, global_pos2, color)
 
-    def draw_gobal(self, pos1, pos2, color):
+    def draw_global(self, pos1, pos2, color):
         """
         Draw line using global coordinate system
         :param pos1: global point
@@ -196,7 +196,7 @@ class Graphics:
         p = 0.5: 50%, zoom out to half the current scale
         """
         #TODO: zoomin into a point
-        self.screencs.scale(p)
+        self.screencs.scale_by(p)
 
     def add_toplink(self, link):
         """
@@ -261,5 +261,5 @@ class TopLink():
             # if remainder is zero, draw full stage
             stage = 1
         graphics.cs.make_equal(self.coordinatespace)
-        graphics.draw_local((0,0), (self.shape.length/2, 0), 0, (255,0,0))
+        graphics.draw_local((0,0), (self.shape.length/2, 0), 0, (255,255,255))
         self.shape.draw(stage, graphics)

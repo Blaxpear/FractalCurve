@@ -17,7 +17,7 @@ class Link:
 
         graphics.cs.set_origin(self.vtx1.pos(stage))
         graphics.cs.rotate(self.angle)
-        graphics.cs.scale(self.scale)
+        graphics.cs.scale_by(self.scale)
 
         next_stage = stage - 1
 

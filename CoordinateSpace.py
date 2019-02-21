@@ -5,37 +5,45 @@ class Coordinatespace:
     """
     A transformed coordinate system
     """
-    def __init__(self, angle, scale, origin):
+    def __init__(self, angle, scale_x, scale_y, origin):
         self.angle = angle
-        self.s = [scale, scale]
+        self.scale = [scale_x, scale_y]
         self.origin = origin
 
-    def scale(self, factor):
+    def scale_by(self, factor):
         """
         Scale the local coordinate system from the local origin
         :param factor: scaling factor
         """
-        self.s = [self.s[0]*factor, self.s[1]*factor]
+        self.scale = [self.scale[0] * factor, self.scale[1] * factor]
 
     def scale_x(self, factor):
         """
         Scale the local x axis
         :param factor: scaling factor
         """
-        self.s[0] = self.s[0]*factor
+        self.scale[0] = self.scale[0] * factor
 
     def scale_y(self, factor):
         """
         Scale the local y axis
         :param factor: scaling factor
         """
-        self.s[1] = self.s[1]*factor
+        self.scale[1] = self.scale[1] * factor
 
     def rotate(self, theta):
         """
         Rotate the local coordinate space around local origin
         :param theta: rotation angle
         """
+        x_mirrored = self.scale[0] < 0
+        y_mirrored = self.scale[1] < 0
+        if y_mirrored and x_mirrored:
+            theta = theta + math.pi
+        elif y_mirrored:
+            theta = -theta
+        elif x_mirrored:
+            theta = math.pi - theta
         self.angle += theta
 
     def set_origin(self, pos):
@@ -52,7 +60,7 @@ class Coordinatespace:
         :param other: coordinate space to copy
         """
         self.angle = other.angle
-        self.s = other.s
+        self.scale = other.scale
         self.origin = other.origin
 
     def get_global_pos(self, pos):
@@ -64,8 +72,8 @@ class Coordinatespace:
         :return:
         (x, y) global position
         """
-        x, y = self.rotate_point(pos[0], pos[1], 0, 0, self.angle)
-        return self.origin[0] + x*self.s[0], self.origin[1] + y*self.s[1]
+        x, y = self.rotate_point(pos[0] * self.scale[0], pos[1] * self.scale[1], 0, 0, self.angle)
+        return self.origin[0] + x, self.origin[1] + y
 
     @staticmethod
     def rotate_point(x, y, xo, yo, theta):

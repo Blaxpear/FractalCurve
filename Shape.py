@@ -21,7 +21,7 @@ class Shape:
         Link each vertex to the one next to it
         """
         for i in range(len(self.vtx) - 1):
-            if i % 1 == 0:
+            if i % 2 == 0:
                 self.links.append(self.link(self.vtx[i], self.vtx[i + 1], mirror_y=False, mirror_x=False))
             else:
                 self.links.append(self.link(self.vtx[i], self.vtx[i + 1], mirror_y=False, mirror_x=False))
