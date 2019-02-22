@@ -8,7 +8,8 @@ from Debugger import Debugger
 def main():
     c = sqrt(3) / 2
     vtx = ((0, 0), (50, 50), (100, 0))
-    sh = Shape([Vertex(x, y) for x, y in vtx])
+    sh = Shape()
+    sh.link_vertices([Vertex(x, y) for x, y in vtx])
 
     s = Settings('settings.ini')
     d = Debugger(s)

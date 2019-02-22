@@ -5,26 +5,33 @@ class Shape:
     """
     Object that is the repeating pattern in the fractal
     """
-    def __init__(self, vtxlist):
-        """
-        Create shape by linking adjacent vertices in the vtxlist
-        :param vtxlist: list of vertices
-        """
-        self.length = vtxlist[0].distanceTo(vtxlist[-1])
-        self.vtx = vtxlist
-        self.set_zeroshape()
-        self.links = []
-        self.link_adjacent()
+    def __init__(self):
+        self.length = None
+        self.start = None
+        self.end = None
+        # list of Link objects that will recursively draw next shapes
+        self.links = None
+        # list of Vertex object pairs to only draw lines
+        self.visuals = None
 
-    def link_adjacent(self):
+    def link_vertices(self, vtxlist):
+        self.length = vtxlist[0].distanceTo(vtxlist[-1])
+        self.start = vtxlist[0]
+        self.end = vtxlist[-1]
+        self.set_zeroshape(vtxlist)
+        self.links = []
+        self.link_adjacent(vtxlist)
+        self.visuals = []
+
+    def link_adjacent(self, vtxlist):
         """
         Link each vertex to the one next to it
         """
-        for i in range(len(self.vtx) - 1):
+        for i in range(len(vtxlist) - 1):
             if i % 2 == 0:
-                self.links.append(self.link(self.vtx[i], self.vtx[i + 1], mirror_y=False, mirror_x=False))
+                self.links.append(self.link(vtxlist[i], vtxlist[i + 1], mirror_y=True, mirror_x=False))
             else:
-                self.links.append(self.link(self.vtx[i], self.vtx[i + 1], mirror_y=False, mirror_x=False))
+                self.links.append(self.link(vtxlist[i], vtxlist[i + 1], mirror_y=False, mirror_x=False))
 
     def link(self, vtx1, vtx2, mirror_x, mirror_y) -> Link:
         """
@@ -46,7 +53,7 @@ class Shape:
         """
         if stage == 0:
             # draw zero-shape, aka a line from first to last vertex
-            graphics.draw_local(self.vtx[0].pos(0), self.vtx[-1].pos(0), stage)
+            graphics.draw_local(self.start.pos(0), self.end.pos(0), stage)
             return True
         elif stage <= 1:
             self.draw_transitional(stage, graphics)
@@ -71,14 +78,14 @@ class Shape:
         :param stage: stage
         :param graphics: graphics object to draw onto
         """
-        for i in range(len(self.links)):
-            graphics.draw_local(self.vtx[i].pos(stage), self.vtx[i + 1].pos(stage), stage)
+        for link in self.links:
+            graphics.draw_local(link.vtx1.pos(stage), link.vtx2.pos(stage), stage)
 
-    def set_zeroshape(self):
+    def set_zeroshape(self, vtx):
         """
         Set zero shape position for each vertex
         """
-        vtxamount = len(self.vtx)
+        vtxamount = len(vtx)
         dx = self.length/(vtxamount-1)
         for i in range(vtxamount):
-            self.vtx[i].set_zeropos(i*dx, 0)
+            vtx[i].set_zeropos(i*dx, 0)

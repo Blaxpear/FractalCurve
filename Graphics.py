@@ -58,8 +58,8 @@ class Graphics:
             firstShape = self.root.draw(self.stage, self)
             if firstShape:
                 # create a top link for the first shape
-                self.add_toplink(Link(self.root.vtx[0],
-                                      self.root.vtx[-1],
+                self.add_toplink(Link(self.root.start,
+                                      self.root.end,
                                       1,
                                       self.root,
                                       mirror_x=False,
