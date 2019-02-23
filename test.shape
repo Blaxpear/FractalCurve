@@ -1,0 +1,7 @@
+vertex: 0,0
+vertex: 50,50
+vertex: 100,0
+start: 1
+end: 3
+link: 1; 2; 0; 1
+link: 2; 3; 0; 0

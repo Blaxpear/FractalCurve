@@ -10,9 +10,9 @@ class Shape:
         self.start = None
         self.end = None
         # list of Link objects that will recursively draw next shapes
-        self.links = None
+        self.links = []
         # list of Vertex object pairs to only draw lines
-        self.visuals = None
+        self.visuals = []
 
     def link_vertices(self, vtxlist):
         self.length = vtxlist[0].distanceTo(vtxlist[-1])
@@ -29,11 +29,11 @@ class Shape:
         """
         for i in range(len(vtxlist) - 1):
             if i % 2 == 0:
-                self.links.append(self.link(vtxlist[i], vtxlist[i + 1], mirror_y=True, mirror_x=False))
+                self.links.append(self.get_link(vtxlist[i], vtxlist[i + 1], mirror_y=True, mirror_x=False))
             else:
-                self.links.append(self.link(vtxlist[i], vtxlist[i + 1], mirror_y=False, mirror_x=False))
+                self.links.append(self.get_link(vtxlist[i], vtxlist[i + 1], mirror_y=False, mirror_x=False))
 
-    def link(self, vtx1, vtx2, mirror_x, mirror_y) -> Link:
+    def get_link(self, vtx1, vtx2, mirror_x, mirror_y) -> Link:
         """
         Return a link between these vertices
         :param vtx1: first vertex

@@ -20,3 +20,18 @@ vtx = ((0, 0), (d, 0), (d, h), (100-d, h), (100-d, 0), (100, 0))
 sh = Shape([Vertex(x, y) for x, y in vtx])
 colors =  0,0,0 ; 255,0,0 ; 255,200,0
 colorstages = 0 ; 0.9 ; 1
+
+Serpinski triangle,
+first and last link are y-mirrored (when i % 2 == 0)
+c = sqrt(3) / 2
+vtx = ((0, 0), (25, 50*c), (75, 50*c), (100, 0))
+
+A chain of pearls that repeat the fractal in really cool ways,
+first and last link are y-mirrored (when i % 2 == 0)
+c = 2/sqrt(3)
+vtx = ((0, 0), (50, 25*c), (50, -25*c), (100, 0))
+
+Spiraling tentacles
+first and last link are y-mirrored (when i % 2 == 0)
+c = 2/sqrt(3)
+vtx = ((0, 0), (25, 25*c), (75, -25*c), (100, 0))
