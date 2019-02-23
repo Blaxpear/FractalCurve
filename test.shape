@@ -4,5 +4,5 @@ vertex: 50,50
 vertex: 100,0
 start: first
 end: last
-link: 1; 2; 0; 0
-link: 2; 3; 0; 0
+info: fist parameter after ':' is boolean for y-mirroring every odd link, second is for even links
+link all: 0; 1
