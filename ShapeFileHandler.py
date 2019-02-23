@@ -51,8 +51,8 @@ class ShapeFileHandler:
         if self.manual_zeropos:
             # on each vertex row there are two xy pairs
             fullstage, zerostage = coordinates
-            x, y = fullstage
-            x0, y0 = zerostage
+            x, y = fullstage.split(',')
+            x0, y0 = zerostage.split(',')
             vtx = Vertex(float(x), float(y))
             vtx.set_zeropos(float(x0), float(y0))
             self.vertices.append(vtx)
@@ -69,8 +69,12 @@ class ShapeFileHandler:
         :param columns: columns of the row
         Columns's second element must be an integer index (starting from 1) of the previously saved vertex
         """
-        vxt_index = int(columns[1])
-        self.shape.start = self.vertices[vxt_index - 1]
+        setting = columns[1].strip().lower()
+        if setting == 'first':
+            vtx_index = 1
+        else:
+            vtx_index = int(columns[1])
+        self.shape.start = self.vertices[vtx_index - 1]
 
     def set_end(self, columns):
         """
@@ -79,8 +83,12 @@ class ShapeFileHandler:
         :param columns: columns of the row
         Columns's second element must be an integer index (starting from 1) of the previously saved vertex.
         """
-        vxt_index = int(columns[1])
-        self.shape.end = self.vertices[vxt_index - 1]
+        setting = columns[1].strip().lower()
+        if setting == 'last':
+            vtx_index = len(self.vertices)
+        else:
+            vtx_index = int(columns[1])
+        self.shape.end = self.vertices[vtx_index - 1]
         self.shape.length = self.shape.start.distanceTo(self.shape.end)
 
     def add_link(self, columns):
