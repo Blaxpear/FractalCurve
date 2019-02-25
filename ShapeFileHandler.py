@@ -26,7 +26,8 @@ class ShapeFileHandler:
         self.shape = Shape()
         self.manual_zeropos = False
         for line in f.readlines():
-
+            if ':' not in line:
+                continue
             columns = line.split(':')
             rowtype = columns[0]
             arguments = columns[1]
@@ -112,7 +113,7 @@ class ShapeFileHandler:
         ind2 = int(ind2) - 1
         mir_x = mir_x.strip() == '1'
         mir_y = mir_y.strip() == '1'
-        self.shape.links.append(self.shape.get_link(self.vertices[ind1], self.vertices[ind2], mir_x, mir_y))
+        self.shape.link(self.vertices[ind1], self.vertices[ind2], mir_x, mir_y)
 
     def link_all(self, arguments):
         """

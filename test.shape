@@ -1,8 +1,12 @@
 info: basic two line shape
 vertex: 0,0
 vertex: 50,50
+vertex: 75,100
+vertex: 100,50
 vertex: 100,0
 start: first
 end: last
 info: fist parameter after ':' is boolean for y-mirroring every odd link, second is for even links
-link all: 0; 1
+link: 2;3; 0; 1
+link: 3;4; 0; 1
+link: 4;5; 0; 0
