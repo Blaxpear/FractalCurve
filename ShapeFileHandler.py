@@ -10,7 +10,8 @@ class ShapeFileHandler:
                          'start': self.set_start,
                          'end': self.set_end,
                          'link': self.add_link,
-                         'link all': self.link_all}
+                         'link all': self.link_all,
+                         'visual': self.add_visual}
         self.vertices = None
         self.shape = None
         self.manual_zeropos = False
@@ -113,7 +114,7 @@ class ShapeFileHandler:
         ind2 = int(ind2) - 1
         mir_x = mir_x.strip() == '1'
         mir_y = mir_y.strip() == '1'
-        self.shape.link(self.vertices[ind1], self.vertices[ind2], mir_x, mir_y)
+        self.shape.add_link(self.vertices[ind1], self.vertices[ind2], mir_x, mir_y)
 
     def link_all(self, arguments):
         """
@@ -128,6 +129,12 @@ class ShapeFileHandler:
         mir_y_even = arguments.split(';')[1].strip() == '1'
         for i in range(len(self.vertices) - 1):
             if i % 2 == 0:
-                self.shape.link(self.vertices[i], self.vertices[i + 1], mirror_y=mir_y_even, mirror_x=False)
+                self.shape.add_link(self.vertices[i], self.vertices[i + 1], mirror_y=mir_y_even, mirror_x=False)
             else:
-                self.shape.link(self.vertices[i], self.vertices[i + 1], mirror_y=mir_y_odd, mirror_x=False)
+                self.shape.add_link(self.vertices[i], self.vertices[i + 1], mirror_y=mir_y_odd, mirror_x=False)
+
+    def add_visual(self, arguments):
+        ind1, ind2 = arguments.split(';')
+        ind1 = int(ind1) - 1
+        ind2 = int(ind2) - 1
+        self.shape.add_visual(self.vertices[ind1], self.vertices[ind2])

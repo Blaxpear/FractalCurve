@@ -1,4 +1,5 @@
 from Link import Link
+from Vertex import Vertex
 
 
 class Shape:
@@ -11,12 +12,25 @@ class Shape:
         self.end = None
         # list of Link objects that will recursively draw next shapes
         self.links = []
-        # list of Vertex object pairs to only draw lines
         self.visuals = []
+        # if this is true, always draw just one line from start to end
+        self.is_zero = False
 
-    def link(self, vtx1, vtx2, mirror_x, mirror_y):
+    def make_zero(self, length):
         """
-        Return a link between these vertices
+        Make this shape have only one link along x-axis
+        :param length: length of the link
+        """
+        self.start = Vertex(0,0)
+        self.start.set_zeropos(0,0)
+        self.end = Vertex(length, 0)
+        self.end.set_zeropos(length, 0)
+        self.length = length
+        self.is_zero = True
+
+    def add_link(self, vtx1, vtx2, mirror_x, mirror_y):
+        """
+        Save a link between these vertices
         :param vtx1: first vertex
         :param vtx2: second vertex
         :param mirror_x: boolean
@@ -26,6 +40,14 @@ class Shape:
         scale = d / self.length
         self.links.append(Link(vtx1, vtx2, scale, self, mirror_x=mirror_x, mirror_y=mirror_y))
 
+    def add_visual(self, vtx1, vtx2):
+        """
+        Save a visual line between these lines
+        :param vtx1: first vertex
+        :param vtx2: second vertex
+        """
+        self.visuals.append((vtx1, vtx2))
+
     def draw(self, stage, graphics) -> bool:
         """
         Draw shape in given stage and assign top links
@@ -33,7 +55,7 @@ class Shape:
         :param graphics: graphics object
         :return: True if this was the last shape to draw
         """
-        if stage == 0:
+        if stage == 0 or self.is_zero:
             # draw zero-shape, aka a line from first to last vertex
             graphics.draw_local(self.start.pos(0), self.end.pos(0), stage)
             return True
@@ -49,10 +71,10 @@ class Shape:
                 # revert coordinate space that was altered by the link
                 # to equal the coordinate space of this shape
                 graphics.csstack.revert()
+            self.draw_visuals(stage, graphics)
             # remove the coordinate space of this shape from the stack
             graphics.csstack.pop()
             return False
-
 
     def draw_transitional(self, stage, graphics):
         """
@@ -62,6 +84,19 @@ class Shape:
         """
         for link in self.links:
             graphics.draw_local(link.vtx1.pos(stage), link.vtx2.pos(stage), stage)
+        self.draw_visuals(stage, graphics)
+
+    def draw_visuals(self, stage, graphics):
+        """
+        Draw visual lines
+        :param stage: stage
+        :param graphics: graphics object to draw onto
+        :return:
+        """
+        clamped_stage = min(stage, 1)
+        stage_remainder = stage % 1
+        for visual in self.visuals:
+            graphics.draw_local(visual[0].pos(clamped_stage), visual[1].pos(clamped_stage), stage_remainder)
 
     def set_zeroshape(self, vtx):
         """

@@ -28,7 +28,7 @@ vtx = ((0, 0), (25, 50*c), (75, 50*c), (100, 0))
 
 A chain of pearls that repeat the fractal in really cool ways,
 first and last link are y-mirrored (when i % 2 == 0)
-c = 2/sqrt(3)
+c = 2/sqrt(3) ; 1.7320508075688772935274463415059
 vtx = ((0, 0), (50, 25*c), (50, -25*c), (100, 0))
 
 Spiraling tentacles

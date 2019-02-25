@@ -28,6 +28,7 @@ class Graphics:
         self.colors = settings.getlist2d("Graphics", "colors", float)
         self.root = root
         self.toplinks = []
+        self.visuals = []
         self.stage = None
         self.surf = surface
         self.cs = Coordinatespace(0, 1, 1, (0, 0))

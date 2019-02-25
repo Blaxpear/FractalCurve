@@ -63,16 +63,10 @@ class Environment:
         :param speed: how much stage changes each frame
         """
         self.graphics.stage = start
-        stage_ceil = ceil(start)
         while not self.exited:
             if self.graphics.stage <= end or end == -1:
                 self.graphics.advancestage(speed, end)
-                if stage_ceil != ceil(self.graphics.stage):
-                    # stage has passed a whole number
-                    stage_ceil = ceil(self.graphics.stage)
-                    self.updateFrame(True)
-                else:
-                    self.updateFrame(False)
+                self.updateFrame(True)
 
             if self.export:
                 self.exportScreen("tmp", self.graphics.stage)
