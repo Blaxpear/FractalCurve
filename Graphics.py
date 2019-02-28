@@ -62,7 +62,6 @@ class Graphics:
                                       self.root.end,
                                       1,
                                       self.root,
-                                      mirror_x=False,
                                       mirror_y=False))
         else:
             self.draw_toplinks()

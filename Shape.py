@@ -14,7 +14,7 @@ class Shape:
         # list of Vertex object pairs to only draw lines
         self.visuals = []
 
-    def link(self, vtx1, vtx2, mirror_x, mirror_y):
+    def link(self, vtx1, vtx2, mirror_y):
         """
         Return a link between these vertices
         :param vtx1: first vertex
@@ -24,7 +24,7 @@ class Shape:
         """
         d = vtx1.distanceTo(vtx2)
         scale = d / self.length
-        self.links.append(Link(vtx1, vtx2, scale, self, mirror_x=mirror_x, mirror_y=mirror_y))
+        self.links.append(Link(vtx1, vtx2, scale, self, mirror_y=mirror_y))
 
     def draw(self, stage, graphics) -> bool:
         """
