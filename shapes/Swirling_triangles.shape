@@ -1,0 +1,11 @@
+info: animate this to see triangles swirl outwards
+vertex: 0, 0 ; 0, 0
+vertex: 50,86.60254037844385 ; 0,0
+vertex: 100, 0 ; 100,0
+start: first
+end: last
+info: fist parameter after ':' is boolean for y-mirroring every odd link, second is for even links
+link: 1;2;0;0
+link: 2;3;0;0
+link: 3;1;0;0
+
