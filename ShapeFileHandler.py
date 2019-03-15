@@ -128,16 +128,36 @@ class ShapeFileHandler:
         :param arguments:
         A string that has elements delimited by ';'
         elements:
-        1: 0/1 boolean integer for y-mirroring all odd links
-        2: 0/1 boolean integer for y-mirroring all even links
+
+        1:
+        integer n. when link number (starts at 1) is divisible by n, mirror link y-axis.
+        if n is negative, mirror y-axis when line number is NOT divisible ny n.
+        if n is zero, never mirror
+
+        2: same as above, but for x-axis
         """
-        mir_y_odd = arguments.split(';')[0].strip() == '1'
-        mir_y_even = arguments.split(';')[1].strip() == '1'
+        mir_x_n = int(arguments.split(';')[0].strip())
+        mir_y_n = int(arguments.split(';')[1].strip())
         for i in range(len(self.vertices) - 1):
-            if i % 2 == 0:
-                self.shape.link(self.vertices[i], self.vertices[i + 1], mirror_y=mir_y_even)
+            first = i
+            second = i + 1
+
+            # every line number is divisible by 1, and negating it
+            # will never mirror the link
+            if mir_x_n == 0:
+                mir_x_n = -1
+            if mir_y_n == 0:
+                mir_y_n = -1
+
+            mirror_y = ((i + 1) % abs(mir_y_n) == 0) == (mir_y_n > 0)
+            mirror_x = ((i + 1) % abs(mir_x_n) == 0) == (mir_x_n > 0)
+            if not mirror_x:
+                self.shape.link(self.vertices[first], self.vertices[second], mirror_y)
             else:
-                self.shape.link(self.vertices[i], self.vertices[i + 1], mirror_y=mir_y_odd)
+                # mirroring along x-axis is the same as switching start and end
+                # vertices and mirroring along y-axis. if y-mirror was also set,
+                # it must be unset
+                self.shape.link(self.vertices[second], self.vertices[first], not mirror_y)
 
     def add_visual(self, arguments):
         ind1, ind2 = arguments.split(';')

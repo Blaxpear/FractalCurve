@@ -19,7 +19,6 @@ class Shape:
         Save a link between these vertices
         :param vtx1: first vertex
         :param vtx2: second vertex
-        :param mirror_x: boolean
         :param mirror_y: boolean
         """
         d = vtx1.distanceTo(vtx2)

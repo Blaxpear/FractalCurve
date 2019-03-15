@@ -1,10 +1,8 @@
 info: basic two line shape
 vertex: 0,0
+vertex: 0,50
 vertex: 100,50
 vertex: 100,0
 start: first
 end: last
-info: fist parameter after ':' is boolean (1/0) for x-mirroring and second for y
-link: 1;2;1;1
-link: 2;3;0;0
-
+link all: 0;3
