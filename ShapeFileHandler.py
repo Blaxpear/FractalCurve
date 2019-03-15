@@ -112,9 +112,15 @@ class ShapeFileHandler:
         ind1, ind2, mir_x, mir_y = arguments.split(';')
         ind1 = int(ind1) - 1
         ind2 = int(ind2) - 1
-        mir_x = mir_x.strip() == '1'
         mir_y = mir_y.strip() == '1'
-        self.shape.add_link(self.vertices[ind1], self.vertices[ind2], mir_x, mir_y)
+        if mir_x.strip() == '1':
+            # mirroring along x-axis is the same as switching start and end
+            # vertices and mirroring along y-axis. if y-mirror was also set,
+            # it must be unset
+            mir_y = not mir_y
+            self.shape.link(self.vertices[ind2], self.vertices[ind1], mir_y)
+        else:
+            self.shape.link(self.vertices[ind1], self.vertices[ind2], mir_y)
 
     def link_all(self, arguments):
         """
@@ -129,9 +135,9 @@ class ShapeFileHandler:
         mir_y_even = arguments.split(';')[1].strip() == '1'
         for i in range(len(self.vertices) - 1):
             if i % 2 == 0:
-                self.shape.add_link(self.vertices[i], self.vertices[i + 1], mirror_y=mir_y_even, mirror_x=False)
+                self.shape.link(self.vertices[i], self.vertices[i + 1], mirror_y=mir_y_even)
             else:
-                self.shape.add_link(self.vertices[i], self.vertices[i + 1], mirror_y=mir_y_odd, mirror_x=False)
+                self.shape.link(self.vertices[i], self.vertices[i + 1], mirror_y=mir_y_odd)
 
     def add_visual(self, arguments):
         ind1, ind2 = arguments.split(';')

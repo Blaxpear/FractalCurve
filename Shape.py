@@ -1,5 +1,4 @@
 from Link import Link
-from Vertex import Vertex
 
 
 class Shape:
@@ -12,9 +11,10 @@ class Shape:
         self.end = None
         # list of Link objects that will recursively draw next shapes
         self.links = []
+        # list of Vertex object pairs to only draw lines
         self.visuals = []
 
-    def add_link(self, vtx1, vtx2, mirror_x, mirror_y):
+    def link(self, vtx1, vtx2, mirror_y):
         """
         Save a link between these vertices
         :param vtx1: first vertex
@@ -24,7 +24,7 @@ class Shape:
         """
         d = vtx1.distanceTo(vtx2)
         scale = d / self.length
-        self.links.append(Link(vtx1, vtx2, scale, self, mirror_x=mirror_x, mirror_y=mirror_y))
+        self.links.append(Link(vtx1, vtx2, scale, self, mirror_y=mirror_y))
 
     def add_visual(self, vtx1, vtx2):
         """
