@@ -3,7 +3,6 @@ from math import pi
 from CoordinateSpace import Coordinatespace
 from CoordinateSpaceStack import CSStack
 from Link import Link
-from Toplink import TopLink
 
 
 class Graphics:
@@ -27,7 +26,6 @@ class Graphics:
         self.colorstages = settings.getlist("Graphics", "colorstages", float)
         self.colors = settings.getlist2d("Graphics", "colors", float)
         self.root = root
-        self.toplinks = []
         self.visuals = []
         self.stage = None
         self.surf = surface
@@ -45,29 +43,12 @@ class Graphics:
         else:
             self.stage = min(self.stage + amount, end)
 
-    def redraw(self, new_toplinks):
+    def redraw(self):
         """
         Redraw fractal
-        :param new_toplinks:
-        if True, recalculate and assign top links
-        if False, draw shapes onto top links
         """
         self.draw_bg()
-
-        if new_toplinks:
-            self.reset_toplinks()
-            firstShape = self.root.draw(self.stage, self)
-            if firstShape:
-                # create a top link for the first shape
-                self.add_toplink(Link(self.root.start,
-                                      self.root.end,
-                                      1,
-                                      self.root,
-                                      mirror_x=False,
-                                      mirror_y=False))
-        else:
-            self.draw_toplinks()
-
+        self.root.draw(self.stage, self)
         self.draw_stagecounter()
 
     def reset_view(self):
@@ -192,28 +173,3 @@ class Graphics:
         """
         #TODO: zoomin into a point
         self.screencs.scale_by(p)
-
-    def add_toplink(self, link):
-        """
-        Create a TopLink object from link
-        :param link: link that draws the last shape at current stage
-        """
-        self.toplinks.append(TopLink(link.shape, self.cs, self.debug))
-
-    def reset_toplinks(self):
-        """
-        Delete all elements in toplinks list.
-        This needs to be executed every time stage passes whole numbers
-        """
-        self.toplinks = []
-
-    def draw_toplinks(self):
-        """
-        Draw shapes onto top links.
-        Top links must be assigned before calling this function.
-        """
-        self.csstack.push()
-        for toplink in self.toplinks:
-            toplink.draw(self.stage, self)
-        self.csstack.revert()
-        self.csstack.pop()

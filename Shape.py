@@ -13,20 +13,6 @@ class Shape:
         # list of Link objects that will recursively draw next shapes
         self.links = []
         self.visuals = []
-        # if this is true, always draw just one line from start to end
-        self.is_zero = False
-
-    def make_zero(self, length):
-        """
-        Make this shape have only one link along x-axis
-        :param length: length of the link
-        """
-        self.start = Vertex(0,0)
-        self.start.set_zeropos(0,0)
-        self.end = Vertex(length, 0)
-        self.end.set_zeropos(length, 0)
-        self.length = length
-        self.is_zero = True
 
     def add_link(self, vtx1, vtx2, mirror_x, mirror_y):
         """
@@ -50,12 +36,12 @@ class Shape:
 
     def draw(self, stage, graphics) -> bool:
         """
-        Draw shape in given stage and assign top links
+        Draw shape in given stage
         :param stage: stage
         :param graphics: graphics object
         :return: True if this was the last shape to draw
         """
-        if stage == 0 or self.is_zero:
+        if stage == 0:
             # draw zero-shape, aka a line from first to last vertex
             graphics.draw_local(self.start.pos(0), self.end.pos(0), stage)
             return True

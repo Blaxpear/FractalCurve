@@ -27,9 +27,5 @@ class Link:
         if self.mirror_y:
             graphics.cs.scale_y(-1)
 
-        lastShape = self.shape.draw(next_stage, graphics)
-
-        if lastShape:
-            # this link is a top link at current stage
-            graphics.add_toplink(self)
+        self.shape.draw(next_stage, graphics)
 

@@ -9,7 +9,6 @@ class Debugger:
         self.graphics = None
         self.enabled = settings.getitem("Debug", "enabled", str) == "True"
         self.drawing = settings.getitem("Debug", "drawing", str) == "True"
-        self.toplinks = settings.getitem("Debug", "toplinks", str) == "True"
         self.origin_indicator = settings.getitem("Debug", "origin", str) == "True"
 
     def global_draw(self, cs, pos1, pos2):
@@ -37,14 +36,6 @@ class Debugger:
         print(scope + ":  scale: {:4.2f}, {:4.2f} angle: {:4.2f} orig: {:3}, {:3} pos1: {:3}, {:3} pos1: {:3}, {:3}"
               .format(cs.scale[0], cs.scale[1], cs.angle / 2 / pi * 360, cs.origin[0], cs.origin[1],
                       pos1[0], pos1[1], pos2[0], pos2[1]))
-
-    def toplink(self, length):
-        """
-        Draw a white line from toplink origin to indicate x-axis direction
-        :param length: length of the link
-        """
-        if self.enabled and self.toplinks:
-            self.graphics.draw_local((0, 0), (length / 2, 0), 0, (255, 255, 255))
 
     def origin(self):
         """

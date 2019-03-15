@@ -66,7 +66,7 @@ class Environment:
         while not self.exited:
             if self.graphics.stage <= end or end == -1:
                 self.graphics.advancestage(speed, end)
-                self.updateFrame(True)
+                self.updateFrame()
 
             if self.export:
                 self.exportScreen("tmp", self.graphics.stage)
@@ -76,16 +76,13 @@ class Environment:
         if self.export:
             self.exportToGif("animation.gif")
 
-    def updateFrame(self, new_toplinks=True):
+    def updateFrame(self):
         """
         Handle events for a new frame
-        :param new_toplinks:
-        to optimize code, set false when stage has not passed a
-        whole number since last frame
         """
         self.doevents()
         if self.autodraw:
-            self.graphics.redraw(new_toplinks)
+            self.graphics.redraw()
         pygame.display.update()
 
     def exportToGif(self, name):
@@ -105,7 +102,7 @@ class Environment:
         :param stage: stage
         :return: int, number of lines
         """
-        linesinshape = len(self.graphics.root.links)
+        linesinshape = len(self.graphics.root.links + self.graphics.root.visuals)
         return linesinshape ** ceil(stage)
 
     def print_progress(self):
