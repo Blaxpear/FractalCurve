@@ -104,14 +104,22 @@ class ShapeFileHandler:
         elements:
         1: index of first vertex (starting from 1)
         2: index of second vertex
-        3: 0/1 boolean integer for mirroring y-axis
+        3: 0/1 boolean integer for mirroring x-axis
+        4: 0/1 boolean integer for mirroring y-axis
         vertices at those indexes must be defined before calling this
         """
-        ind1, ind2, mir_y = arguments.split(';')
+        ind1, ind2, mir_x, mir_y = arguments.split(';')
         ind1 = int(ind1) - 1
         ind2 = int(ind2) - 1
         mir_y = mir_y.strip() == '1'
-        self.shape.link(self.vertices[ind1], self.vertices[ind2], mir_y)
+        if mir_x.strip() == '1':
+            # mirroring along x-axis is the same as switching start and end
+            # vertices and mirroring along y-axis. if y-mirror was also set,
+            # it must be unset
+            mir_y = not mir_y
+            self.shape.link(self.vertices[ind2], self.vertices[ind1], mir_y)
+        else:
+            self.shape.link(self.vertices[ind1], self.vertices[ind2], mir_y)
 
     def link_all(self, arguments):
         """
