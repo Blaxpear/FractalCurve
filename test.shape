@@ -5,4 +5,4 @@ vertex: 100,50
 vertex: 100,0
 start: first
 end: last
-link all: 0;3
+link all: 0;-2
