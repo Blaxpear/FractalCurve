@@ -3,8 +3,10 @@ vertex: 0, 0
 vertex: 50,28.86751345948129
 vertex: 50,-28.86751345948129
 vertex: 100, 0
+
 start: first
 end: last
-info: fist parameter after ':' is boolean for y-mirroring every odd link, second is for even links
-link all: 1; 0
+
+info: mirror every even link along y-axis
+link all: 0; 2
 
