@@ -1,16 +1,18 @@
 # Fractal Curve
 
-Python program for generating and animating recursively drawn line fractals,
+Python program for generating and animating recursively drawn line fractals.
 
-## Getting Started
+## The concept
 
 The fractal is defined by the root shape and a floating point number called stage parameter. The integer part of the stage parameter tells how many full recursions of the root shape to draw. What ever decimals remains after the integer part defines the stage of the last or "top" shapes in the fractal. 
 
-Stage of a shape is between 0 and 1. 0 stage is the first formation of vertices  to draw when stage has passed a whole number or in other words new shapes start to emerge. 1 corresponds to shape being fully drawn and the shape is ready to draw next shapes onto its lines. Between 0 and 1 the the shape transitions linearly from zero shape to full shape.
+Stage of a shape is effectively between 0 and 1. 0 stage is the first formation of vertices  to draw when stage has passed a whole number or in other words new shapes start to emerge. 1 corresponds to shape being fully drawn and the shape is ready to draw next shapes onto its links. Between 0 and 1 the the shape transitions linearly from zero shape to full shape.
 
 Shapes consist of vertices, links, and visuals. Vertices have two positions; zero shape position and full shape position. Vertices will move linearly from zero to full position as the stage of the shape changes from 0 to 1. Links are connections between vertices that will draw their parent shape between their two vertices once the stage of the shape is greater than 1. Visuals are just lines between vertices and will not recursively draw their parent shape like Links.
-
-The shape that the program draws is defined in a shape (regular text) file. The file contains rows that start with a command and after that come command specific parameters. 
+## How to run
+Settings.ini file contains some useful settings out of which the most important one is the "shape" setting under the section "Program". This setting contains a path to the shape file to read. Change this to refer to the shape file you want to read and run Main.py.
+## Shape file
+The shape that the program draws is defined in a regular text file. The file contains rows that start with a command and after that come command specific parameters. 
 
 Example file defining a square that has no bottom line:
 ```
@@ -73,12 +75,12 @@ Visual: i; j
 ###### Link All
 This command defines links between all (except between last and first vertex) vertices in the order they were declared. Most of the time this command is all you need to achieve what you want.
 
-This command also defines a link mirroring pattern. If the link number (first link is one and so on) is divisible by nx or ny, it will be mirrored along x- or y-axis respectively. If the integer nx or ny is negative, the link will be mirrored always when the link number is NOT divisible. 
+This command also defines a link mirroring pattern. If the link number (first link is one and so on) is divisible by nx or ny, it will be mirrored along x- or y-axis respectively. If the integer nx or ny is negative, the link will be mirrored always when the link number is NOT divisible. If the integer is zero, it means never mirror.
 ```
 Link all: nx; ny
 ```
-- nx: x-mirroring pattern
-- ny: y-mirroring pattern
+- nx: (int) x-mirroring pattern
+- ny: (int) y-mirroring pattern
 
 ###### Comments
 Any row that does not start with a command, is treated as a comment.
