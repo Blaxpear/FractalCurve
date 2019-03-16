@@ -7,8 +7,8 @@ from Debugger import Debugger
 
 def main():
     fh = ShapeFileHandler()
-    sh = fh.load('test.shape')
     s = Settings('settings.ini')
+    sh = fh.load(s.getitem("Program", "shape", str))
     d = Debugger(s)
     e = Environment(sh, s, d)
     e.runmode()
