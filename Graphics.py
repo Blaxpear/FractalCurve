@@ -75,7 +75,7 @@ class Graphics:
         Clear screen and draw origin if they are set true in settings
         """
         if self.clearframe:
-            self.surf.fill((0, 0, 0))
+            self.surf.fill((255, 255, 255))
         self.debug.origin()
 
     def draw_stagecounter(self):
@@ -95,7 +95,17 @@ class Graphics:
         """
         self.debug.local_draw(self.cs, pos1, pos2)
         if color is None:
-            color = self.get_gradient_color(stage)
+            RGB1 = self.colors[0]
+            RGB2 = self.colors[1]
+            D_RGB = [RGB2[0] - RGB1[0],
+                     RGB2[1] - RGB1[1],
+                     RGB2[2] - RGB1[2]]
+            p = (self.stage**4 / 8**4)
+            r = min(max(0, RGB1[0] + D_RGB[0] * p), 255)
+            g = min(max(0, RGB1[1] + D_RGB[1] * p), 255)
+            b = min(max(0, RGB1[2] + D_RGB[2] * p), 255)
+            color = r, g, b
+            #color = self.get_gradient_color(stage)
         global_pos1 = self.cs.get_global_pos(pos1)
         global_pos2 = self.cs.get_global_pos(pos2)
         self.draw_global(global_pos1, global_pos2, color)

@@ -1,0 +1,12 @@
+info: with only one link, stage can be set really high. (eg. 50)
+
+vertex: 0,0
+vertex: 50,95
+vertex: 100,0
+
+start: first
+end: last
+
+# link: 1;2; 0; 0
+visual: 1;2
+link: 2;3; 0; 0

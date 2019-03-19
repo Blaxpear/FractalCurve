@@ -1,0 +1,11 @@
+info: looks better with global y mirror
+
+vertex: 0,0
+vertex: 60,30
+vertex: 90,0
+
+start: first
+end: last
+
+link: 1;2; 0; 1
+link: 2;3; 1; 0

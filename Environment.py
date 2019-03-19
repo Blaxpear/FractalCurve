@@ -73,8 +73,9 @@ class Environment:
 
             time.sleep(0.01)
 
-        if self.export:
-            self.exportToGif("animation.gif")
+        # if self.export:
+        #    self.exportToGif("animation.gif")
+
 
     def updateFrame(self):
         """
@@ -94,7 +95,7 @@ class Environment:
         imageio.mimsave(name, images, duration=0.001)
 
     def exportScreen(self, folder, stage):
-        pygame.image.save(self.surf, "{}/frame{}.jpeg".format(folder, stage))
+        pygame.image.save(self.surf, "{}/frame{}.png".format(folder, stage))
 
     def linestodraw(self, stage):
         """
