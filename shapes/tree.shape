@@ -1,0 +1,11 @@
+info: basic two line shape
+vertex: 0,0
+vertex: 100,0
+vertex: 150,50
+vertex: 150,-50
+
+start: first
+end: 2
+visual: 1;2
+link: 2;3;0;0
+link: 2;4;0;0

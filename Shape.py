@@ -81,7 +81,7 @@ class Shape:
         clamped_stage = min(stage, 1)
         stage_remainder = stage % 1
         for visual in self.visuals:
-            graphics.draw_local(visual[0].pos(clamped_stage), visual[1].pos(clamped_stage), stage_remainder)
+            graphics.draw_local(visual[0].pos(clamped_stage), visual[1].pos(clamped_stage), stage)
 
     def set_zeroshape(self, vtx):
         """

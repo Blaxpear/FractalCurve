@@ -1,8 +1,8 @@
 info: basic two line shape
 vertex: 0,0
-vertex: 0,50
-vertex: 100,50
+vertex: 50,50
 vertex: 100,0
+
 start: first
 end: last
-link all: 0;-2
+link all: 0;0

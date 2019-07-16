@@ -153,6 +153,10 @@ class Graphics:
                     g = min(max(0, RGB1[1] + D_RGB[1]*p), 255)
                     b = min(max(0, RGB1[2] + D_RGB[2]*p), 255)
                     return r, g, b
+                if stage < self.colorstages[0]:
+                    return self.colors[0]
+                if stage > self.colorstages[-1]:
+                    return self.colors[-1]
 
     def drag_screen(self, amount):
         """
