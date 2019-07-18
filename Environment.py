@@ -29,6 +29,8 @@ class Environment:
         self.debug.graphics = self.graphics
         self.total_lines = 0
         self.autodraw = settings.getitem("Program", "autodraw", str) == "True"
+        self.premature = settings.getitem("Program", "premature", str) == "True"
+        self.shapes = settings.getitem("Program", "shapes", int)
         self.export = settings.getitem("Program", "export", str) == "True"
 
     def runmode(self):
@@ -55,9 +57,10 @@ class Environment:
         while not self.exited:
             self.updateFrame()
 
+
     def animate(self, start, end, speed):
         """
-        Animate fractal stages from start to end
+        Animate the fractal
         :param start: first stage
         :param end: last stage, -1 for infinity
         :param speed: how much stage changes each frame
@@ -82,7 +85,7 @@ class Environment:
         """
         self.doevents()
         if self.autodraw:
-            self.graphics.redraw()
+            self.graphics.redraw(self.premature, self.shapes)
         pygame.display.update()
 
     def exportToGif(self, name):

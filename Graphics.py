@@ -43,12 +43,18 @@ class Graphics:
         else:
             self.stage = min(self.stage + amount, end)
 
-    def redraw(self):
+    def redraw(self, premature=False, shapes=0):
         """
         Redraw fractal
+        :param premature: bool, premature mode
+        :param shapes: int, number of shapes to draw
+        in premature mode
         """
         self.draw_bg()
-        self.root.draw(self.stage, self)
+        if premature:
+            self.root.draw_premature(self.stage, self, shapes)
+        else:
+            self.root.draw(self.stage, self)
         self.draw_stagecounter()
 
     def reset_view(self):

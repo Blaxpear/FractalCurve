@@ -21,9 +21,7 @@ class Shape:
         :param vtx2: second vertex
         :param mirror_y: boolean
         """
-        d = vtx1.distanceTo(vtx2)
-        scale = d / self.length
-        self.links.append(Link(vtx1, vtx2, scale, self, mirror_y=mirror_y))
+        self.links.append(Link(vtx1, vtx2, self.length, self, mirror_y=mirror_y))
 
     def add_visual(self, vtx1, vtx2):
         """
@@ -32,6 +30,30 @@ class Shape:
         :param vtx2: second vertex
         """
         self.visuals.append((vtx1, vtx2))
+
+    def draw_premature(self, stage, graphics, shapes):
+        """
+        Draw shape with recursive drawing happening prematurely.
+        This means that all shapes are drawn from the beginning.
+        :param stage: float between 0 and 1, stage of the shape.
+        all shapes will be drawn with this stage.
+        :param graphics: graphics object
+        :param shapes: int, number of shapes to draw
+        """
+        if shapes == 0:
+            self.draw_transitional(stage, graphics)
+        else:
+            graphics.csstack.push()
+
+            for link in self.links:
+                link.draw_premature(stage, graphics, shapes - 1)
+                graphics.csstack.revert()
+
+            self.draw_visuals(stage, graphics)
+
+            graphics.csstack.pop()
+
+
 
     def draw(self, stage, graphics) -> bool:
         """

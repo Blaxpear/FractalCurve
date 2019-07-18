@@ -40,19 +40,30 @@ class Vertex:
             # position in transition
             return [self.x0 + self.dx * stage, self.y0 + self.dy * stage]
 
-
-    def angleTo(self, vertex):
+    def angleTo(self, vertex, stage=1):
         """
         Return angle between vector from this vertex to given vertex and positive x-axis
         :param vertex: vertex
+        :param stage: float, if given, angle is measured from staged positions
         :return: float, angle in rads
         """
-        return math.atan2(vertex.y - self.y, vertex.x - self.x)
+        if stage == 1:
+            return math.atan2(vertex.y - self.y, vertex.x - self.x)
+        else:
+            pos1 = self.pos(stage)
+            pos2 = vertex.pos(stage)
+            return math.atan2(pos2[1] - pos1[1], pos2[0] - pos1[0])
 
-    def distanceTo(self, vertex):
+    def distanceTo(self, vertex, stage=1):
         """
         Return distance between vertices
         :param vertex: vertex
+        :param stage: float, if given, distance is measured from staged positions
         :return: float, distance
         """
-        return math.hypot(vertex.x - self.x, vertex.y - self.y)
+        if stage == 1:
+            return math.hypot(vertex.x - self.x, vertex.y - self.y)
+        else:
+            pos1 = self.pos(stage)
+            pos2 = vertex.pos(stage)
+            return math.hypot(pos2[0] - pos1[0], pos2[1] - pos1[1])
