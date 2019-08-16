@@ -1,5 +1,6 @@
 from Shape import Shape
 from Vertex import Vertex
+from math import sqrt
 
 class ShapeFileHandler:
     """
@@ -59,15 +60,15 @@ class ShapeFileHandler:
             fullstage, zerostage = coordinates
             x, y = fullstage.split(',')
             x0, y0 = zerostage.split(',')
-            vtx = Vertex(float(x), float(y))
-            vtx.set_zeropos(float(x0), float(y0))
+            vtx = Vertex(self.evaluate_position(x), self.evaluate_position(y))
+            vtx.set_zeropos(self.evaluate_position(x0), self.evaluate_position(y0))
             self.vertices.append(vtx)
         else:
             # on each vertex row there are only one xy pair
             # zero positions will be distributed equally along a
             # line from start vertex to end vertex
             x, y = coordinates[0].split(',')
-            self.vertices.append(Vertex(float(x), float(y)))
+            self.vertices.append(Vertex(self.evaluate_position(x), self.evaluate_position(y)))
 
     def set_start(self, index):
         """
@@ -96,6 +97,15 @@ class ShapeFileHandler:
             vtx_index = int(index)
         self.shape.end = self.vertices[vtx_index - 1]
         self.shape.length = self.shape.start.distanceTo(self.shape.end)
+
+    def evaluate_position(self, text):
+        """
+        Evaluate a string of text representing a mathematical equation
+        :param text: equation to evaluate
+        :return: float, the result of the evaluation
+        """
+        return eval(text)
+
 
     def add_link(self, arguments):
         """
